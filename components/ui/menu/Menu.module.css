@@ -1,0 +1,157 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background-color: var(--neutral-50);
+  border: 1px solid var(--neutral-200);
+  color: var(--neutral-900);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.trigger:hover {
+  background-color: var(--neutral-100);
+}
+
+.trigger:focus-visible {
+  ring: 2px solid var(--primary-500);
+  ring-offset: 2px;
+}
+
+.trigger[aria-expanded="true"] {
+  background-color: var(--neutral-100);
+  border-color: var(--neutral-300);
+}
+
+.content {
+  min-width: 200px;
+  background-color: var(--menu-bg);
+  border: 1px solid var(--menu-border);
+  border-radius: var(--menu-radius);
+  box-shadow: var(--menu-shadow);
+  padding: 4px;
+  outline: none;
+  animation: slideIn 0.2s ease-out;
+  transform-origin: top;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Sizes */
+.sm {
+  min-width: 160px;
+  padding: 2px;
+}
+
+.md {
+  min-width: 200px;
+  padding: 4px;
+}
+
+/* Alignment (simplified for absolute positioning) */
+.start {
+  transform-origin: top left;
+}
+
+.center {
+  transform: translateX(-50%);
+  transform-origin: top;
+}
+
+.end {
+  transform-origin: top right;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  color: var(--menu-text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.1s ease, color 0.1s ease;
+  outline: none;
+  user-select: none;
+}
+
+.sm .item {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.item:hover,
+.item:focus {
+  background-color: var(--menu-item-hover);
+}
+
+.item:active {
+  background-color: var(--menu-item-active);
+}
+
+.danger {
+  color: #ef4444;
+}
+
+.danger:hover,
+.danger:focus {
+  background-color: #fef2f2;
+}
+
+.dark .danger:hover,
+.dark .danger:focus {
+  background-color: #450a0a;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--menu-text-muted);
+}
+
+.label {
+  flex: 1;
+}
+
+.group {
+  padding: 4px 0;
+}
+
+.groupLabel {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--menu-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--menu-border);
+  margin: 4px 0;
+}

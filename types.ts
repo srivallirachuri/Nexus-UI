@@ -1,0 +1,309 @@
+import React, { ReactNode } from "react";
+
+export type ComponentSize = "sm" | "md" | "lg";
+export type ComponentVariant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "danger"
+  | "success"
+  | "warning"
+  | "link";
+
+export interface ButtonProps extends BaseProps {
+  variant?: ComponentVariant;
+  size?: ComponentSize;
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+  fullWidth?: boolean;
+  icon?: ReactNode;
+  rightIcon?: ReactNode;
+  isIconButton?: boolean;
+  isActive?: boolean;
+  isRound?: boolean;
+  isLoading?: boolean;
+}
+
+export interface BaseProps {
+  children?: ReactNode;
+  className?: string;
+}
+
+// Primitives
+export interface TextProps extends BaseProps {
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
+  weight?: "normal" | "medium" | "semibold" | "bold" | "black";
+  align?: "left" | "center" | "right" | "justify";
+  color?: "default" | "muted" | "primary" | "error" | "success" | "warning" | "white";
+}
+
+export interface HeadingProps extends BaseProps {
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  align?: "left" | "center" | "right";
+  weight?: "normal" | "medium" | "semibold" | "bold" | "black";
+}
+
+export interface BadgeProps extends BaseProps {
+  variant?: "default" | "primary" | "secondary" | "outline" | "ghost" | "danger" | "success" | "warning" | "info";
+  size?: "sm" | "md" | "lg";
+  isRound?: boolean;
+  icon?: ReactNode;
+}
+
+export interface AvatarProps extends BaseProps {
+  src?: string;
+  alt?: string;
+  fallback?: string;
+  size?: "sm" | "md" | "lg" | "xl" | "2xl";
+  shape?: "circle" | "rounded" | "square";
+  status?: "online" | "offline" | "busy" | "away";
+}
+
+// Layout
+export interface BoxProps extends BaseProps {
+  as?: any;
+  padding?: string | number;
+  margin?: string | number;
+  bg?: string;
+  border?: string;
+  rounded?: string;
+  shadow?: string;
+  width?: string;
+  height?: string;
+  position?: "relative" | "absolute" | "fixed" | "sticky";
+  top?: string;
+  left?: string;
+  right?: string;
+  bottom?: string;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+}
+
+export interface FlexProps extends BoxProps {
+  direction?: "row" | "col" | "row-reverse" | "col-reverse";
+  align?: "start" | "center" | "end" | "stretch" | "baseline";
+  justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
+  wrap?: "nowrap" | "wrap" | "wrap-reverse";
+  gap?: string | number;
+}
+export interface ContainerProps extends BaseProps {
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+}
+
+export interface CardProps extends BaseProps {
+  padding?: "none" | "sm" | "md" | "lg";
+  interactive?: boolean;
+}
+
+export interface StackProps extends BaseProps {
+  direction?: "row" | "col";
+  spacing?: 0 | 1 | 2 | 3 | 4 | 6 | 8 | 10 | 12;
+  align?: "start" | "center" | "end" | "stretch";
+  justify?: "start" | "center" | "end" | "between";
+}
+
+// Data Display
+export interface IconProps extends BaseProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  color?: string;
+  viewBox?: string;
+  path?: string;
+  strokeWidth?: number;
+}
+
+// Feedback
+export interface SpinnerProps extends BaseProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  color?: 'current' | 'primary' | 'white' | 'neutral';
+}
+
+export interface SkeletonProps extends BaseProps {
+  variant?: 'text' | 'circular' | 'rectangular';
+  width?: string | number;
+  height?: string | number;
+}
+
+export interface ProgressBarProps extends BaseProps {
+  value: number;
+  max?: number;
+  variant?: 'default' | 'success' | 'warning' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  showLabel?: boolean;
+}
+
+// Forms
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+  helperText?: string;
+}
+
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+  error?: string;
+  helperText?: string;
+}
+
+export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  label?: string;
+  error?: string;
+  helperText?: string;
+  options: { label: string; value: string }[];
+}
+
+export interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+}
+
+export interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+}
+
+export interface SwitchProps {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label?: string;
+}
+
+export interface SliderProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  label?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  value: number;
+  onChange: (value: number) => void;
+}
+
+// Composite
+export interface ModalProps extends BaseProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+  footer?: ReactNode;
+}
+
+export interface DrawerProps extends BaseProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  placement?: "left" | "right" | "top" | "bottom";
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+  footer?: ReactNode;
+}
+
+export interface TooltipProps extends BaseProps {
+  content: string;
+  position?: "top" | "bottom" | "left" | "right";
+  delay?: number;
+}
+
+export interface PopoverProps extends BaseProps {
+  trigger: ReactNode;
+  content: ReactNode;
+  position?: "top" | "bottom" | "left" | "right";
+}
+
+export interface TabsProps extends BaseProps {
+  items: { label: string; content: ReactNode; id: string }[];
+  defaultTab?: string;
+  variant?: "line" | "enclosed" | "pills";
+}
+
+export interface AccordionProps extends BaseProps {
+  items: { title: string; content: ReactNode; id: string }[];
+  allowMultiple?: boolean;
+}
+
+export interface DropdownProps extends BaseProps {
+  trigger: ReactNode;
+  items: { label: string; onClick?: () => void; href?: string; icon?: ReactNode; danger?: boolean }[];
+  align?: "left" | "right";
+}
+
+export interface AlertProps extends BaseProps {
+  variant?: "info" | "success" | "warning" | "danger";
+  title?: string;
+  icon?: ReactNode;
+  onClose?: () => void;
+}
+
+export interface ToastProps extends BaseProps {
+  variant?: "info" | "success" | "warning" | "danger";
+  title?: string;
+  description?: string;
+  duration?: number;
+  onClose: () => void;
+}
+
+// Navigation
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+  isCurrent?: boolean;
+}
+
+export interface BreadcrumbsProps extends BaseProps {
+  items: BreadcrumbItem[];
+  separator?: ReactNode;
+}
+
+export interface Step {
+  title: string;
+  description?: string;
+  status: "complete" | "current" | "upcoming";
+}
+
+export interface StepperProps extends BaseProps {
+  steps: Step[];
+  orientation?: "horizontal" | "vertical";
+}
+
+export interface PaginationProps extends BaseProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+// Utilities
+export interface CodeBlockProps extends BaseProps {
+  code: string;
+  language?: string;
+  showLineNumbers?: boolean;
+}
+
+export interface PortalProps {
+  children: ReactNode;
+  container?: HTMLElement;
+}
+
+export interface ComponentDocumentation {
+  name: string;
+  description: string;
+  category:
+    | "foundations"
+    | "primitives"
+    | "layout"
+    | "composite"
+    | "forms"
+    | "navigation"
+    | "patterns";
+  props: PropDefinition[];
+  examples: Example[];
+}
+
+export interface PropDefinition {
+  name: string;
+  type: string;
+  defaultValue?: string;
+  description: string;
+  required?: boolean;
+}
+
+export interface Example {
+  title: string;
+  code: string;
+  render: () => ReactNode;
+}

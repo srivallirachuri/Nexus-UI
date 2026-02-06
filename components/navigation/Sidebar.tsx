@@ -38,6 +38,7 @@ const navGroups = [
         title: 'Primitives',
         items: [
           { name: 'Button', id: 'button' },
+          { name: 'Icon Button', id: 'icon-button' },
           { name: 'Text', id: 'text' },
           { name: 'Heading', id: 'heading' },
           { name: 'Badge', id: 'badge' },

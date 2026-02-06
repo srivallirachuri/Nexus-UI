@@ -10,21 +10,24 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(({
   showLabel = false,
   indeterminate = false,
   label,
+  labelPosition = 'top',
   className = '',
   ...props
 }, ref) => {
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
-  return (
-    <div className={`${styles.container} ${className}`} ref={ref} {...props}>
-      {(showLabel || label) && (
-        <div className={styles.labelContainer}>
-          {label && <span className={styles.label}>{label}</span>}
-          {showLabel && !indeterminate && (
-            <span className={styles.value}>{Math.round(percentage)}%</span>
-          )}
-        </div>
+  const labelContent = (
+    <div className={styles.labelContainer}>
+      {label && <span className={styles.label}>{label}</span>}
+      {showLabel && !indeterminate && (
+        <span className={styles.value}>{Math.round(percentage)}%</span>
       )}
+    </div>
+  );
+
+  return (
+    <div className={`${styles.container} ${styles[labelPosition]} ${className}`} ref={ref} {...props}>
+      {labelPosition === 'top' && (showLabel || label) && labelContent}
       <div 
         className={`${styles.progressBar} ${styles[size]} ${styles[variant]} ${indeterminate ? styles.indeterminate : ''}`}
         role="progressbar"
@@ -34,9 +37,10 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(({
       >
         <div 
           className={styles.indicator} 
-          style={{ width: indeterminate ? '50%' : `${percentage}%` }} // Width doesn't matter much for indeterminate animation but keeps it visible
+          style={{ width: indeterminate ? '50%' : `${percentage}%` }}
         />
       </div>
+      {labelPosition === 'right' && (showLabel || label) && labelContent}
     </div>
   );
 });

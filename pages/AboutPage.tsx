@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Card } from '../components/ui/Layout';
 import { Heading, Text, Badge } from '../components/ui/Primitives';
+import { openGitHubRepos } from '../utils/github';
+
 
 export const AboutPage: React.FC = () => {
   return (
@@ -55,14 +57,12 @@ export const AboutPage: React.FC = () => {
           <Text className="mb-6">
             Have questions or want to contribute? The best way to reach us is through our GitHub repository.
           </Text>
-          <a 
-            href="https://github.com/PavaniKotipalli29/Nexus-UI" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:opacity-90 transition-opacity"
+          <button 
+            onClick={openGitHubRepos}
+            className="inline-flex items-center px-4 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-md font-medium hover:opacity-90 transition-opacity focus:outline-none"
           >
             Visit GitHub
-          </a>
+          </button>
         </section>
 
       </Container>

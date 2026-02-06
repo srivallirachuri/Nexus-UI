@@ -113,11 +113,13 @@ export interface StackProps extends BaseProps {
 
 // Data Display
 export interface IconProps extends BaseProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'xs';
   color?: string;
+  fill?: string;
   viewBox?: string;
   path?: string;
   strokeWidth?: number;
+  variant?: 'outline' | 'solid';
 }
 
 // Feedback

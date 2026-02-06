@@ -357,24 +357,37 @@ export const Icon: React.FC<IconProps> = ({
   path,
   children,
   strokeWidth = 2,
+  fill = 'none',
+  variant = 'outline',
   className = ''
 }) => {
   const sizes = {
+    xs: 'w-3 h-3',
     sm: 'w-4 h-4',
     md: 'w-6 h-6',
     lg: 'w-8 h-8',
-    xl: 'w-12 h-12'
+    xl: 'w-12 h-12',
+    '2xl': 'w-16 h-16'
   };
+
+  const isSolid = variant === 'solid';
 
   return (
     <svg 
       className={`${sizes[size]} ${className}`} 
-      fill="none" 
+      fill={isSolid ? (fill === 'none' ? color : fill) : 'none'} 
       viewBox={viewBox} 
-      stroke={color} 
+      stroke={isSolid ? 'none' : color} 
       xmlns="http://www.w3.org/2000/svg"
     >
-      {path && <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={strokeWidth} d={path} />}
+      {path && (
+        <path 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+          strokeWidth={isSolid ? 0 : strokeWidth} 
+          d={path} 
+        />
+      )}
       {children}
     </svg>
   );

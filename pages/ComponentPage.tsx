@@ -30,8 +30,6 @@ interface ComponentDoc {
   description: string;
   examples: { title: string, render: () => React.ReactNode, code: string }[];
   props: { name: string, type: string, default: string, desc: string }[];
-  usageGuidelines?: string;
-  accessibilityNotes?: string;
 }
 
 const docs: Record<string, ComponentDoc> = {
@@ -224,27 +222,6 @@ const docs: Record<string, ComponentDoc> = {
       { name: 'fullWidth', type: 'boolean', default: 'false', desc: 'Stretch to full width.' },
       { name: 'isActive', type: 'boolean', default: 'false', desc: 'Active state.' },
     ],
-    usageGuidelines: `
-### When to use
-- **Primary**: Main call-to-action. Use only one per page/section.
-- **Secondary**: Alternative actions (e.g., "Cancel", "Back").
-- **Ghost**: Low priority actions or inside toolbars/menus.
-- **Danger**: Destructive actions like "Delete" or "Remove".
-
-### Common Mistakes
-- Don't use multiple Primary buttons in the same view.
-- Don't use vague labels like "Click here". Use action verbs like "Save" or "Submit".
-    `,
-    accessibilityNotes: `
-### Keyboard Interaction
-- **Enter** or **Space**: Activates the button.
-- **Tab**: Moves focus to the button.
-
-### ARIA & Focus
-- Uses native \`<button>\` element for maximum compatibility.
-- Interactive elements must have a visible focus style.
-- If using an icon-only button, ensure \`aria-label\` provides a text description.
-    `
   },
   text: {
     id: 'text',
@@ -311,7 +288,7 @@ const docs: Record<string, ComponentDoc> = {
       { name: 'weight', type: 'normal | medium | semibold | bold | black', default: 'normal', desc: 'The font weight.' },
       { name: 'align', type: 'left | center | right | justify', default: 'left', desc: 'The text alignment.' },
       { name: 'color', type: 'default | muted | primary | error | success | warning | white', default: 'default', desc: 'The text color.' },
-    ]
+    ],
   },
   heading: {
       id: 'heading',
@@ -405,19 +382,6 @@ const docs: Record<string, ComponentDoc> = {
       { name: 'isRound', type: 'boolean', default: 'false', desc: 'Use pill shape.' },
       { name: 'icon', type: 'ReactNode', default: '-', desc: 'Icon element.' },
     ],
-    usageGuidelines: `
-### When to use
-- **Status**: To show state (e.g., Active, Pending).
-- **Counts**: To show notification counts.
-
-### Common Mistakes
-- Don't use for interactive elements (use Button).
-    `,
-    accessibilityNotes: `
-### ARIA
-- Badges are generally decorative or status indicators.
-- If status changes, ensure it's announced via \`aria-live\`.
-    `
   },
   box: {
       id: 'box',
@@ -497,18 +461,6 @@ const docs: Record<string, ComponentDoc> = {
       { name: 'interactive', type: 'boolean', default: 'false', desc: 'Hover effects.' },
       { name: 'children', type: 'ReactNode', default: '-', desc: 'Card content.' }
     ],
-    usageGuidelines: `
-### When to use
-- **Grouping**: To group related content.
-- **Dashboard**: For widgets or stats.
-
-### Common Mistakes
-- Don't nest cards too deeply.
-    `,
-    accessibilityNotes: `
-### ARIA
-- Use headings inside the card to outline content.
-    `
   },
   stack: {
     id: 'stack',
@@ -531,19 +483,41 @@ const docs: Record<string, ComponentDoc> = {
       id: 'icon',
       name: 'Icon',
       category: 'Primitives',
-      description: 'Icon component for SVG paths.',
+      description: 'A component for rendering SVG icons with support for outline and solid variants.',
       examples: [
           {
               title: 'Sizes',
               render: () => (
                   <Flex gap={4} align="center">
+                      <Icon size="xs"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></Icon>
                       <Icon size="sm"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></Icon>
                       <Icon size="md"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></Icon>
                       <Icon size="lg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></Icon>
                       <Icon size="xl"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></Icon>
+                      <Icon size="2xl"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></Icon>
                   </Flex>
               ),
-              code: `<Flex gap={4} align="center">\n  <Icon size="sm"><path d="..."/></Icon>\n  <Icon size="md"><path d="..."/></Icon>\n  <Icon size="lg"><path d="..."/></Icon>\n  <Icon size="xl"><path d="..."/></Icon>\n</Flex>`
+              code: `<Flex gap={4} align="center">\n  <Icon size="xs" .../>\n  <Icon size="md" .../>\n  <Icon size="xl" .../>\n  <Icon size="2xl" .../>\n</Flex>`
+          },
+          {
+             title: 'Variants (Outline vs Solid)',
+             render: () => (
+                <Flex gap={8}>
+                   <Stack spacing={2} align="center">
+                      <Icon color="primary.600" size="lg"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></Icon>
+                      <Text size="xs">Outline</Text>
+                   </Stack>
+                   <Stack spacing={2} align="center">
+                      <Icon variant="solid" color="red.500" size="lg"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></Icon>
+                      <Text size="xs">Solid</Text>
+                   </Stack>
+                   <Stack spacing={2} align="center">
+                      <Icon variant="solid" color="blue.500" size="lg"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></Icon>
+                      <Text size="xs">Solid Check</Text>
+                   </Stack>
+                </Flex>
+             ),
+             code: `<Icon variant="outline" ... />\n<Icon variant="solid" color="red.500" ... />`
           },
           {
              title: 'Colors & Stroke',
@@ -558,43 +532,64 @@ const docs: Record<string, ComponentDoc> = {
           }
       ],
       props: [
-        { name: 'size', type: 'sm | md | lg | xl', default: 'md', desc: 'Size of the icon.' },
+        { name: 'size', type: 'xs | sm | md | lg | xl | 2xl', default: 'md', desc: 'Size of the icon.' },
+        { name: 'variant', type: 'outline | solid', default: 'outline', desc: 'Display variant.' },
         { name: 'color', type: 'string', default: 'currentColor', desc: 'Icon color.' },
-        { name: 'strokeWidth', type: 'number', default: '2', desc: 'Stroke width.' },
+        { name: 'fill', type: 'string', default: 'none', desc: 'Custom fill color (if different from color).' },
+        { name: 'strokeWidth', type: 'number', default: '2', desc: 'Stroke width for outline icons.' },
       ]
   },
   'icon-button': {
     id: 'icon-button',
     name: 'Icon Button',
     category: 'Primitives',
-    description: 'Button with only an icon.',
-    examples: [{
-      title: 'Variants',
-      render: () => <Flex gap={4}><IconButton aria-label="Search" icon={<Icon><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></Icon>} /><IconButton variant="ghost" aria-label="Edit" icon={<Icon><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></Icon>} /><IconButton variant="outline" aria-label="Delete" icon={<Icon><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></Icon>} /></Flex>,
-      code: `<IconButton aria-label="Search" icon={<Icon ... />} />`
-    }, {
-      title: 'Sizes',
-      render: () => <Flex gap={4} align="center"><IconButton size="sm" aria-label="Small" icon={<Icon size="sm"><path d="M12 4v16m8-8H4"/></Icon>} /><IconButton size="md" aria-label="Medium" icon={<Icon size="md"><path d="M12 4v16m8-8H4"/></Icon>} /><IconButton size="lg" aria-label="Large" icon={<Icon size="lg"><path d="M12 4v16m8-8H4"/></Icon>} /></Flex>,
-      code: `<IconButton size="sm" ... />`
-    }, {
-      title: 'Loading',
-      render: () => <IconButton isLoading aria-label="Loading" icon={<Icon><path d="M12 4v16m8-8H4"/></Icon>} />,
-      code: `<IconButton isLoading ... />`
-    }],
-    props: [
-      { name: 'icon', type: 'ReactNode', default: '-', desc: 'Icon element.' },
-      { name: 'aria-label', type: 'string', default: '-', desc: 'Accessible label.' },
-      { name: 'variant', type: 'solid | ghost | outline | surface', default: 'solid', desc: 'Visual style.' },
-      { name: 'size', type: 'sm | md | lg', default: 'md', desc: 'Button size.' },
-      { name: 'tooltip', type: 'string', default: '-', desc: 'Tooltip text.' },
-      { name: 'isLoading', type: 'boolean', default: 'false', desc: 'Loading state.' },
-      { name: 'disabled', type: 'boolean', default: 'false', desc: 'Disabled state.' }
+    description: 'A button containing only an icon, used for common actions in compact spaces.',
+    examples: [
+      {
+        title: 'Variants',
+        render: () => (
+          <Flex gap={4}>
+            <IconButton aria-label="Search" icon={<Icon><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></Icon>} />
+            <IconButton variant="ghost" aria-label="Edit" icon={<Icon><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></Icon>} />
+            <IconButton variant="outline" aria-label="Delete" icon={<Icon><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></Icon>} />
+            <IconButton variant="surface" aria-label="Share" icon={<Icon><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></Icon>} />
+          </Flex>
+        ),
+        code: `<IconButton aria-label="Search" icon={<Icon ... />} />\n<IconButton variant="ghost" aria-label="Edit" ... />\n<IconButton variant="outline" aria-label="Delete" ... />`
+      },
+      {
+        title: 'Sizes',
+        render: () => (
+          <Flex gap={4} align="center">
+            <IconButton size="sm" aria-label="Small" icon={<Icon size="sm"><path d="M12 4v16m8-8H4"/></Icon>} />
+            <IconButton size="md" aria-label="Medium" icon={<Icon size="md"><path d="M12 4v16m8-8H4"/></Icon>} />
+            <IconButton size="lg" aria-label="Large" icon={<Icon size="lg"><path d="M12 4v16m8-8H4"/></Icon>} />
+          </Flex>
+        ),
+        code: `<IconButton size="sm" ... />\n<IconButton size="md" ... />\n<IconButton size="lg" ... />`
+      },
+      {
+        title: 'States',
+        render: () => (
+          <Flex gap={4}>
+            <IconButton isLoading aria-label="Loading" icon={<Icon><path d="M12 4v16m8-8H4"/></Icon>} />
+            <IconButton disabled aria-label="Disabled" icon={<Icon><path d="M12 4v16m8-8H4"/></Icon>} />
+            <IconButton tooltip="Special Action" aria-label="Help" icon={<Icon><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></Icon>} />
+          </Flex>
+        ),
+        code: `<IconButton isLoading aria-label="Loading" ... />\n<IconButton disabled aria-label="Disabled" ... />\n<IconButton tooltip="Tooltip Text" aria-label="Help" ... />`
+      }
     ],
-    accessibilityNotes: `
-### Accessibility
-- **Labeling**: Always provide an \`aria-label\` since there is no visible text.
-- **Focus**: Fully keyboard accessible with visible focus states.
-    `
+    props: [
+      { name: 'icon', type: 'ReactNode', default: '-', desc: 'The icon element to render.' },
+      { name: 'aria-label', type: 'string', default: '-', desc: 'Required accessible label for the button.' },
+      { name: 'variant', type: 'solid | ghost | outline | surface', default: 'solid', desc: 'The visual style of the button.' },
+      { name: 'size', type: 'sm | md | lg', default: 'md', desc: 'The size of the button.' },
+      { name: 'isLoading', type: 'boolean', default: 'false', desc: 'Shows a loading spinner instead of the icon.' },
+      { name: 'disabled', type: 'boolean', default: 'false', desc: 'Prevents user interaction.' },
+      { name: 'tooltip', type: 'string', default: '-', desc: 'Text for the integrated tooltip.' },
+      { name: 'onClick', type: '() => void', default: '-', desc: 'Click handler.' }
+    ]
   },
   avatar: {
     id: 'avatar',
@@ -672,25 +667,7 @@ const docs: Record<string, ComponentDoc> = {
         { name: 'helperText', type: 'string', default: '-', desc: 'Helper text.' },
         { name: 'placeholder', type: 'string', default: '-', desc: 'Placeholder text.' },
         { name: 'type', type: 'string', default: 'text', desc: 'Input type.' }
-    ],
-    usageGuidelines: `
-### When to use
-- **Text Fields**: For short, single-line data (names, emails).
-- **Search**: For filtering or finding content.
-
-### Common Mistakes
-- Don't use for long text (use Textarea).
-- Don't forget labels (use \`aria-label\` if visual label is hidden).
-    `,
-    accessibilityNotes: `
-### Keyboard Interaction
-- **Tab**: Focuses the input.
-- **Enter**: Submits the form (if within a \`<form>\`).
-
-### ARIA & Focus
-- Associates \`<label>\` with \`<input>\` via \`htmlFor\` and \`id\`.
-- Displays error messages via \`aria-describedby\`.
-    `
+    ]
   },
   textarea: {
       id: 'textarea',
@@ -844,19 +821,46 @@ const docs: Record<string, ComponentDoc> = {
       ],
       props: [{ name: 'variant', type: 'text | circular | rectangular', default: 'text', desc: 'Shape variant.' }]
   },
-  progress: {
-      id: 'progress',
-      name: 'Progress',
-      category: 'Feedback',
-      description: 'Displays progress of a task.',
-      examples: [
-          {
-              title: 'Usage',
-              render: () => <Stack spacing={4}><ProgressBar value={30} /><ProgressBar value={70} variant="success" /></Stack>,
-              code: `<Stack spacing={4}>\n  <ProgressBar value={30} />\n  <ProgressBar value={70} variant="success" />\n</Stack>`
-          }
-      ],
-      props: [{ name: 'value', type: 'number', default: '0', desc: 'Progress value (0-100).' }]
+  'progress': {
+    id: 'progress',
+    name: 'Progress',
+    category: 'Feedback',
+    description: 'Displays an indicator showing the completion progress of a task.',
+    examples: [{
+      title: 'Basic',
+      render: () => (
+        <Stack spacing={6}>
+          <ProgressBar value={32} label="Default" labelPosition="right" showLabel />
+          <ProgressBar value={60} label="With Top Label" showLabel />
+        </Stack>
+      ),
+      code: `<ProgressBar value={32} label="Progress" labelPosition="right" showLabel />\n<ProgressBar value={60} showLabel />`
+    }, {
+      title: 'Variants',
+      render: () => (
+        <Stack spacing={6}>
+          <ProgressBar value={40} variant="success" labelPosition="right" showLabel />
+          <ProgressBar value={70} variant="warning" labelPosition="right" showLabel />
+          <ProgressBar value={90} variant="danger" labelPosition="right" showLabel />
+          <ProgressBar value={60} variant="gradient" labelPosition="right" showLabel />
+        </Stack>
+      ),
+      code: `<ProgressBar value={40} variant="success" labelPosition="right" showLabel />
+<ProgressBar value={70} variant="warning" labelPosition="right" showLabel />
+<ProgressBar value={90} variant="danger" labelPosition="right" showLabel />
+<ProgressBar value={60} variant="gradient" labelPosition="right" showLabel />`
+    }, {
+      title: 'Indeterminate',
+      render: () => <ProgressBar indeterminate />,
+      code: `<ProgressBar indeterminate />`
+    }],
+    props: [
+      { name: 'value', type: 'number', default: '0', desc: 'Percentage (0-100).' },
+      { name: 'variant', type: 'default | success | warning | danger | gradient', default: 'default', desc: 'Color variant.' },
+      { name: 'showLabel', type: 'boolean', default: 'false', desc: 'Show percentage label.' },
+      { name: 'indeterminate', type: 'boolean', default: 'false', desc: 'Loading animation.' },
+      { name: 'size', type: 'sm | md | lg | xl', default: 'md', desc: 'Height of bar.' }
+    ]
   },
 
 
@@ -1082,28 +1086,6 @@ const docs: Record<string, ComponentDoc> = {
         { name: 'defaultTab', type: 'string', default: '-', desc: 'Initially active tab ID.' },
         { name: 'variant', type: 'line | enclosed | pills', default: 'line', desc: 'Visual style.' }
     ],
-    usageGuidelines: `
-### When to use
-- **Categorization**: Organizing content into different categories.
-- **Context Switching**: Switching between different views of the same context.
-
-### Common Mistakes
-- Don't use for navigation between different pages (use Links or Menu).
-- Don't use too many tabs (scrolling tabs can be hard to use).
-    `,
-    accessibilityNotes: `
-### Keyboard Interaction
-- **Arrow Keys**: Moves focus between tabs.
-- **Enter/Space**: Activates the selected tab.
-- **Home/End**: Moves to the first/last tab.
-
-### ARIA
-- Use \`role="tablist"\` for the container.
-- Use \`role="tab"\` for each tab.
-- Use \`role="tabpanel"\` for the content.
-- Use \`aria-selected\` to indicate the active tab.
-- Use \`aria-controls\` to link tabs to their panels.
-    `
   },
   'accordion': {
     id: 'accordion',
@@ -1296,15 +1278,6 @@ const docs: Record<string, ComponentDoc> = {
         { name: 'disabled', type: 'boolean', default: 'false', desc: 'Disabled state for items.' },
         { name: 'href', type: 'string', default: '-', desc: 'URL for link items.' },
     ],
-    usageGuidelines: `
-### When to use
-- **Menus**: For navigation menus or settings.
-- **Data**: To display simple data sets.
-
-### Accessibility
-- Use \`List\` for semantics (\`<ul>\`).
-- Interactive items automatically get \`role="button"\` or \`role="link"\`.
-    `
   },
   'notification-banner': {
     id: 'notification-banner',
@@ -1721,41 +1694,7 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
         </div>
       </section>
 
-      {(doc.usageGuidelines || doc.accessibilityNotes) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {doc.usageGuidelines && (
-            <section className="space-y-6">
-              <Heading level={2} className="border-b border-neutral-200 dark:border-neutral-800 pb-4">Usage Guidelines</Heading>
-              <Card>
-                <div className="prose dark:prose-invert max-w-none text-sm space-y-4">
-                  {doc.usageGuidelines.split('\n').map((line, i) => {
-                    if (line.startsWith('- ')) return <li key={i} className="ml-4">{line.substring(2)}</li>;
-                    if (line.startsWith('### ')) return <Heading level={4} key={i} className="mt-4 mb-2">{line.substring(4)}</Heading>;
-                    if (line.trim() === '') return <br key={i} />;
-                    return <Text key={i}>{line}</Text>;
-                  })}
-                </div>
-              </Card>
-            </section>
-          )}
 
-          {doc.accessibilityNotes && (
-            <section className="space-y-6">
-              <Heading level={2} className="border-b border-neutral-200 dark:border-neutral-800 pb-4">Accessibility</Heading>
-              <Card>
-                 <div className="prose dark:prose-invert max-w-none text-sm space-y-4">
-                  {doc.accessibilityNotes.split('\n').map((line, i) => {
-                    if (line.startsWith('- ')) return <li key={i} className="ml-4">{line.substring(2)}</li>;
-                    if (line.startsWith('### ')) return <Heading level={4} key={i} className="mt-4 mb-2">{line.substring(4)}</Heading>;
-                    if (line.trim() === '') return <br key={i} />;
-                    return <Text key={i}>{line}</Text>;
-                  })}
-                </div>
-              </Card>
-            </section>
-          )}
-        </div>
-      )}
     </div>
   );
 };

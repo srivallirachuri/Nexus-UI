@@ -19,7 +19,7 @@ import { SOURCES } from '../data/ComponentSources';
 interface ComponentDoc {
   id: string;
   name: string;
-  category: '1D Components' | '2D Components' | '3D Components' | 'Foundations';
+  category: 'Atomic' | 'Reusable' | 'Composite' | 'App-level';
   subCategory?: string;
   description: string;
   implementationSource?: string;
@@ -41,8 +41,8 @@ const docs: Record<string, ComponentDoc> = {
   button: {
     id: 'button',
     name: 'Button',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Buttons allow users to take actions, and make choices, with a single tap.',
     implementationSource: SOURCES.primitives,
     examples: [
@@ -74,8 +74,8 @@ const docs: Record<string, ComponentDoc> = {
   text: {
     id: 'text',
     name: 'Text',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Text is the fundamental component for displaying body copy and small descriptions.',
     implementationSource: SOURCES.primitives,
     examples: [
@@ -104,8 +104,8 @@ const docs: Record<string, ComponentDoc> = {
   icon: {
     id: 'icon',
     name: 'Icon',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'SVG icons with support for outline and solid variants.',
     implementationSource: SOURCES.primitives,
     examples: [
@@ -129,8 +129,8 @@ const docs: Record<string, ComponentDoc> = {
   badge: {
     id: 'badge',
     name: 'Badge',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Badges highlight the state or status of an object.',
     implementationSource: SOURCES.primitives,
     examples: [
@@ -160,8 +160,8 @@ const docs: Record<string, ComponentDoc> = {
   input: {
     id: 'input',
     name: 'Input',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Used for single-line text input.',
     implementationSource: SOURCES.forms,
     examples: [
@@ -179,8 +179,8 @@ const docs: Record<string, ComponentDoc> = {
   textarea: {
     id: 'textarea',
     name: 'Textarea',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Multi-line text input.',
     implementationSource: SOURCES.forms,
     examples: [
@@ -198,8 +198,8 @@ const docs: Record<string, ComponentDoc> = {
   select: {
     id: 'select',
     name: 'Select',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Dropdown selection input.',
     implementationSource: SOURCES.forms,
     examples: [
@@ -216,8 +216,8 @@ const docs: Record<string, ComponentDoc> = {
   heading: {
     id: 'heading',
     name: 'Heading',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Headings are used for titles and subtitles, supporting levels 1 through 6.',
     implementationSource: SOURCES.primitives,
     examples: [
@@ -232,8 +232,8 @@ const docs: Record<string, ComponentDoc> = {
   avatar: {
     id: 'avatar',
     name: 'Avatar',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Displays a user image or initials as a fallback.',
     implementationSource: SOURCES.primitives,
     examples: [
@@ -248,8 +248,8 @@ const docs: Record<string, ComponentDoc> = {
   box: {
     id: 'box',
     name: 'Box',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'A primitive layout component for managing spacing, borders, and position.',
     implementationSource: SOURCES.primitives,
     examples: [
@@ -264,8 +264,8 @@ const docs: Record<string, ComponentDoc> = {
   flex: {
     id: 'flex',
     name: 'Flex',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'A layout component based on Flexbox.',
     implementationSource: SOURCES.primitives,
     examples: [
@@ -280,8 +280,8 @@ const docs: Record<string, ComponentDoc> = {
   checkbox: {
     id: 'checkbox',
     name: 'Checkbox',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Allows multiple selection.',
     implementationSource: SOURCES.forms,
     examples: [
@@ -299,8 +299,8 @@ const docs: Record<string, ComponentDoc> = {
   radio: {
     id: 'radio',
     name: 'Radio',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Single selection from a group.',
     implementationSource: SOURCES.forms,
     examples: [
@@ -318,8 +318,8 @@ const docs: Record<string, ComponentDoc> = {
   switch: {
     id: 'switch',
     name: 'Switch',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Toggle between two states.',
     implementationSource: SOURCES.forms,
     examples: [
@@ -339,8 +339,8 @@ const docs: Record<string, ComponentDoc> = {
   slider: {
     id: 'slider',
     name: 'Slider',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Select a value from a range.',
     implementationSource: SOURCES.forms,
     examples: [
@@ -357,8 +357,8 @@ const docs: Record<string, ComponentDoc> = {
   spinner: {
     id: 'spinner',
     name: 'Spinner',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Indicates loading state.',
     implementationSource: SOURCES.feedback,
     examples: [
@@ -375,8 +375,8 @@ const docs: Record<string, ComponentDoc> = {
   divider: {
     id: 'divider',
     name: 'Divider',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Visually separates content.',
     examples: [
       {
@@ -390,8 +390,8 @@ const docs: Record<string, ComponentDoc> = {
   'progress-bar': {
     id: 'progress-bar',
     name: 'Progress Bar',
-    category: '1D Components',
-    subCategory: 'Atomic',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
     description: 'Visual indicator of progress.',
     implementationSource: SOURCES.progressBarJSX,
     cssSource: SOURCES.progressBarCSS,
@@ -411,8 +411,8 @@ const docs: Record<string, ComponentDoc> = {
   card: {
     id: 'card',
     name: 'Card',
-    category: '2D Components',
-    subCategory: 'Surface',
+    category: 'Reusable',
+    subCategory: 'Molecules',
     description: 'Container for grouped content.',
     implementationSource: SOURCES.layout,
     examples: [
@@ -437,8 +437,8 @@ const docs: Record<string, ComponentDoc> = {
   stack: {
     id: 'stack',
     name: 'Stack',
-    category: '2D Components',
-    subCategory: 'Layout',
+    category: 'Reusable',
+    subCategory: 'Molecules',
     description: 'Vertical or horizontal stack.',
     implementationSource: SOURCES.layout,
     examples: [
@@ -453,8 +453,8 @@ const docs: Record<string, ComponentDoc> = {
   modal: {
     id: 'modal',
     name: 'Modal',
-    category: '2D Components',
-    subCategory: 'Surface',
+    category: 'Reusable',
+    subCategory: 'Molecules',
     description: 'Dialog window that requires user interaction.',
     implementationSource: SOURCES.composite,
     examples: [
@@ -481,8 +481,8 @@ const docs: Record<string, ComponentDoc> = {
   tabs: {
     id: 'tabs',
     name: 'Tabs',
-    category: '2D Components',
-    subCategory: 'Surface',
+    category: 'Reusable',
+    subCategory: 'Molecules',
     description: 'Switch between different views.',
     implementationSource: SOURCES.composite,
     examples: [
@@ -504,8 +504,8 @@ const docs: Record<string, ComponentDoc> = {
   navbar: {
     id: 'navbar',
     name: 'Navbar',
-    category: '3D Components',
-    subCategory: 'Page-Level',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
     description: 'Top navigation bar.',
     examples: [
       {
@@ -523,8 +523,8 @@ const docs: Record<string, ComponentDoc> = {
   sidebar: {
     id: 'sidebar',
     name: 'Sidebar',
-    category: '3D Components',
-    subCategory: 'Page-Level',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
     description: 'Side navigation menu.',
     examples: [
       {
@@ -544,8 +544,8 @@ const docs: Record<string, ComponentDoc> = {
   alert: {
     id: 'alert',
     name: 'Alert',
-    category: '2D Components',
-    subCategory: 'Composition',
+    category: 'Reusable',
+    subCategory: 'Molecules',
     description: 'Displays a brief, important message for a user.',
     implementationSource: SOURCES.composite,
     examples: [
@@ -560,8 +560,8 @@ const docs: Record<string, ComponentDoc> = {
   breadcrumbs: {
     id: 'breadcrumbs',
     name: 'Breadcrumbs',
-    category: '3D Components',
-    subCategory: 'Navigation',
+    category: 'Reusable',
+    subCategory: 'Molecules',
     description: 'Shows the current page location within a hierarchy.',
     implementationSource: SOURCES.navigation,
     examples: [
@@ -576,8 +576,8 @@ const docs: Record<string, ComponentDoc> = {
   'auth-layout': {
     id: 'auth-layout',
     name: 'Auth Layout',
-    category: '3D Components',
-    subCategory: 'Page-Level',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
     description: 'Layout for authentication pages.',
     implementationSource: SOURCES.patterns,
     examples: [
@@ -593,6 +593,310 @@ const docs: Record<string, ComponentDoc> = {
          usageCode: `<AuthLayout title="Welcome">\n  <LoginForm />\n</AuthLayout>`
        }
     ],
+    props: []
+  },
+  // --- New Atomic Components ---
+  label: {
+    id: 'label',
+    name: 'Label',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
+    description: 'A simple text label for form fields.',
+    examples: [{ title: 'Basic', render: () => <Label>Username</Label>, usageCode: `<Label>Username</Label>` }],
+    props: []
+  },
+  tooltip: {
+    id: 'tooltip',
+    name: 'Tooltip',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
+    description: 'Helpful text that appears on hover.',
+    examples: [{ title: 'Preview', render: () => <Tooltip content="This is a tooltip"><Button variant="outline">Hover Me</Button></Tooltip>, usageCode: `<Tooltip content="...">\n  <Button>Hover Me</Button>\n</Tooltip>` }],
+    props: []
+  },
+  link: {
+    id: 'link',
+    name: 'Link',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
+    description: 'Navigation link component.',
+    examples: [{ title: 'Basic', render: () => <a href="#" className="text-primary-600 hover:underline">Click Here</a>, usageCode: `<a href="#" className="text-primary-600 hover:underline">Click Here</a>` }],
+    props: []
+  },
+  typography: {
+    id: 'typography',
+    name: 'Typography',
+    category: 'Atomic',
+    subCategory: 'Foundation / Primitives',
+    description: 'Combined text and heading styles.',
+    examples: [{ title: 'Scale', render: () => <Stack spacing={2}><Heading level={1}>H1</Heading><Text size="lg">Large Body</Text><Text color="muted">Small Detail</Text></Stack>, usageCode: `<Heading level={1}>H1</Heading>\n<Text>Body Text</Text>` }],
+    props: []
+  },
+
+  // --- New Reusable Components ---
+  'input-field': {
+    id: 'input-field',
+    name: 'InputField',
+    category: 'Reusable',
+    subCategory: 'Molecules',
+    description: 'Input combined with Label and Error text.',
+    examples: [{ title: 'Basic', render: () => <Input label="Email" placeholder="you@example.com" />, usageCode: `<Input label="Email" placeholder="..." />` }],
+    props: []
+  },
+  'search-bar': {
+    id: 'search-bar',
+    name: 'SearchBar',
+    category: 'Reusable',
+    subCategory: 'Molecules',
+    description: 'Search input with icon.',
+    examples: [{ title: 'Basic', render: () => <SearchInput placeholder="Search components..." />, usageCode: `<SearchInput placeholder="..." />` }],
+    props: []
+  },
+  'form-field': {
+    id: 'form-field',
+    name: 'FormField',
+    category: 'Reusable',
+    subCategory: 'Molecules',
+    description: 'Generic wrapper for form controls.',
+    examples: [{ title: 'Basic', render: () => <FormWrapper title="Account Settings"><Input label="Display Name" /></FormWrapper>, usageCode: `<FormWrapper title="...">\n  <Input label="..." />\n</FormWrapper>` }],
+    props: []
+  },
+  toast: {
+    id: 'toast',
+    name: 'Toast',
+    category: 'Reusable',
+    subCategory: 'Molecules',
+    description: 'Floating notification message.',
+    examples: [{ title: 'Preview', render: () => <Toast message="Action successful!" type="success" />, usageCode: `<Toast message="..." type="success" />` }],
+    props: []
+  },
+  pagination: {
+    id: 'pagination',
+    name: 'Pagination',
+    category: 'Reusable',
+    subCategory: 'Molecules',
+    description: 'Page navigation controls.',
+    examples: [{ title: 'Basic', render: () => <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />, usageCode: `<Pagination currentPage={1} totalPages={10} />` }],
+    props: []
+  },
+  'toggle-group': {
+    id: 'toggle-group',
+    name: 'ToggleGroup',
+    category: 'Reusable',
+    subCategory: 'Molecules',
+    description: 'Group of mutually exclusive buttons.',
+    examples: [{ title: 'Basic', render: () => <Flex gap={2}><Button variant="secondary" isActive>Left</Button><Button variant="secondary">Center</Button><Button variant="secondary">Right</Button></Flex>, usageCode: `<Flex gap={2}>\n  <Button isActive>Left</Button>\n  <Button>Right</Button>\n</Flex>` }],
+    props: []
+  },
+
+  // --- New Composite Components ---
+  'data-table': {
+    id: 'data-table',
+    name: 'DataTable',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Advanced table with data mapping.',
+    examples: [{ title: 'Preview', render: () => <Table headers={['ID', 'User', 'Status']} rows={[['1', 'John Doe', <Badge variant="success">Active</Badge>]]} />, usageCode: `<Table headers={['ID', 'User']} rows={...} />` }],
+    props: []
+  },
+  'pricing-section': {
+    id: 'pricing-section',
+    name: 'Pricing Section',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Section showcasing pricing tiers.',
+    examples: [{ title: 'Section', render: () => <PricingSection />, usageCode: `<PricingSection />` }],
+    props: []
+  },
+  'hero-section': {
+    id: 'hero-section',
+    name: 'Hero Section',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Main landing page header.',
+    examples: [{ title: 'Section', render: () => <HeroSection />, usageCode: `<HeroSection />` }],
+    props: []
+  },
+  'feature-grid': {
+    id: 'feature-grid',
+    name: 'Feature Grid',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Grid layout for product features.',
+    examples: [{ title: 'Section', render: () => <FeatureGrid />, usageCode: `<FeatureGrid />` }],
+    props: []
+  },
+  'dashboard-stats': {
+    id: 'dashboard-stats',
+    name: 'Dashboard Stats',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Summary statistics panel.',
+    examples: [{ title: 'Preview', render: () => <div className="grid grid-cols-3 gap-4 w-full"><Card className="text-center"><Text size="xs" color="muted">Users</Text><Heading level={4}>2.4k</Heading></Card><Card className="text-center"><Text size="xs" color="muted">Sales</Text><Heading level={4}>$12k</Heading></Card><Card className="text-center"><Text size="xs" color="muted">Orders</Text><Heading level={4}>156</Heading></Card></div>, usageCode: `<div className="grid grid-cols-3 gap-4">\n  <StatCard title="Users" value="2.4k" />\n  <StatCard title="Sales" value="$12k" />\n  <StatCard title="Orders" value="156" />\n</div>` }],
+    props: []
+  },
+  'user-profile-card': {
+    id: 'user-profile-card',
+    name: 'User Profile Card',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Card displaying user information.',
+    examples: [{ title: 'Preview', render: () => <Card><Flex gap={4} align="center"><Avatar /><Stack><Heading level={4}>User Name</Heading><Text color="muted">Admin</Text></Stack></Flex></Card>, usageCode: `<UserProfileCard />` }],
+    props: []
+  },
+  'checkout-summary': {
+    id: 'checkout-summary',
+    name: 'Checkout Summary',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Order details and totals summary.',
+    examples: [{ title: 'Preview', render: () => <Card><Stack spacing={4}><Heading level={4}>Summary</Heading><Flex justify="between"><Text>Subtotal</Text><Text weight="bold">$99.00</Text></Flex><Button fullWidth>Checkout</Button></Stack></Card>, usageCode: `<CheckoutSummary />` }],
+    props: []
+  },
+  'multi-step-form': {
+    id: 'multi-step-form',
+    name: 'Multi-step Form',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Form wizard with multiple steps.',
+    examples: [{ title: 'Preview', render: () => <Stepper steps={['Account', 'Profile', 'Billing']} currentStep={0} />, usageCode: `<Stepper steps={['1', '2']} />` }],
+    props: []
+  },
+  'settings-panel': {
+    id: 'settings-panel',
+    name: 'Settings Panel',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Full app settings interface.',
+    examples: [{ title: 'Preview', render: () => <Box className="border rounded p-4"><Heading level={3}>Settings</Heading><Divider /><Stack spacing={4}><Switch label="Notifications" /><Button>Save</Button></Stack></Box>, usageCode: `<SettingsPanel />` }],
+    props: []
+  },
+  'comments-section': {
+    id: 'comments-section',
+    name: 'Comments Section',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'User discussion and feedback area.',
+    examples: [{ title: 'Preview', render: () => <Stack spacing={4}><Flex gap={2}><Avatar /><Textarea placeholder="Add a comment..." /></Flex><Button size="sm">Post</Button></Stack>, usageCode: `<CommentsSection />` }],
+    props: []
+  },
+  'activity-feed': {
+    id: 'activity-feed',
+    name: 'Activity Feed',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Chronological list of events.',
+    examples: [{ title: 'Preview', render: () => <List><ListItem><ListItemText primary="User Joe joined" secondary="2 mins ago" /></ListItem></List>, usageCode: `<ActivityFeed />` }],
+    props: []
+  },
+  'product-grid': {
+    id: 'product-grid',
+    name: 'Product Grid',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'Showcase grid for e-commerce products.',
+    examples: [{ title: 'Preview', render: () => <div className="grid grid-cols-2 gap-4"><Card><Box className="h-40 bg-neutral-100 mb-2" /><Heading level={5}>Product A</Heading></Card><Card><Box className="h-40 bg-neutral-100 mb-2" /><Heading level={5}>Product B</Heading></Card></div>, usageCode: `<ProductGrid />` }],
+    props: []
+  },
+
+  // --- New App-Level Components ---
+  'login-page': {
+    id: 'login-page',
+    name: 'Login Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'Complete user login screen layout.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border"><AuthLayout title="Login"><LoginForm /></AuthLayout></div>, usageCode: `<LoginPage />` }],
+    props: []
+  },
+  'signup-page': {
+    id: 'signup-page',
+    name: 'Signup Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'Complete user registration layout.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border"><AuthLayout title="Register"><SignupForm /></AuthLayout></div>, usageCode: `<SignupPage />` }],
+    props: []
+  },
+  'dashboard-page': {
+    id: 'dashboard-page',
+    name: 'Dashboard Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'Main application dashboard template.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border"><DashboardLayout>Content</DashboardLayout></div>, usageCode: `<DashboardPage />` }],
+    props: []
+  },
+  'analytics-page': {
+    id: 'analytics-page',
+    name: 'Analytics Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'Data visualization and reporting layout.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border border-dashed flex items-center justify-center">Analytics Template Preview</div>, usageCode: `<AnalyticsPage />` }],
+    props: []
+  },
+  'billing-page': {
+    id: 'billing-page',
+    name: 'Billing Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'Invoicing and nested subscriptions layout.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border border-dashed flex items-center justify-center">Billing Template Preview</div>, usageCode: `<BillingPage />` }],
+    props: []
+  },
+  'profile-page': {
+    id: 'profile-page',
+    name: 'Profile Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'User information and profile management.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border border-dashed flex items-center justify-center">Profile Template Preview</div>, usageCode: `<ProfilePage />` }],
+    props: []
+  },
+  'settings-page': {
+    id: 'settings-page',
+    name: 'Settings Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'Application-wide settings template.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border border-dashed flex items-center justify-center">Settings Template Preview</div>, usageCode: `<SettingsPage />` }],
+    props: []
+  },
+  'landing-page': {
+    id: 'landing-page',
+    name: 'Landing Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'Modular landing page for products.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border"><HeroSection /></div>, usageCode: `<LandingPage />` }],
+    props: []
+  },
+  'checkout-page': {
+    id: 'checkout-page',
+    name: 'Checkout Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'E-commerce checkout process flow.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border border-dashed flex items-center justify-center">Checkout Template Preview</div>, usageCode: `<CheckoutPage />` }],
+    props: []
+  },
+  'admin-panel': {
+    id: 'admin-panel',
+    name: 'Admin Panel',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'Back-office management interface.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border border-dashed flex items-center justify-center">Admin Template Preview</div>, usageCode: `<AdminPanel />` }],
+    props: []
+  },
+  'blog-page': {
+    id: 'blog-page',
+    name: 'Blog Page',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'Content-focused blog layout template.',
+    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border border-dashed flex items-center justify-center">Blog Template Preview</div>, usageCode: `<BlogPage />` }],
     props: []
   }
 };

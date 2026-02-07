@@ -199,15 +199,20 @@ export const Tabs: React.FC<TabsProps> = ({ items, defaultTab, variant = 'line',
   return (
     <div className={`w-full ${className}`}>
       <div className={`flex gap-4 overflow-x-auto ${variant === 'line' ? 'border-b border-neutral-200 dark:border-neutral-800' : ''} ${variant === 'pills' ? 'gap-2' : ''}`}>
-        {items.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => setActiveTab(item.id)}
-            className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${getVariantClasses(activeTab === item.id)}`}
-          >
-            {item.label}
-          </button>
-        ))}
+        {items.map((item) => {
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              data-state={isActive ? 'active' : 'inactive'}
+              className={`group px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${getVariantClasses(isActive)}`}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+
       </div>
       <div className="py-6">
         {items.find(i => i.id === activeTab)?.content}

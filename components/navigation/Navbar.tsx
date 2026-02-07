@@ -23,6 +23,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleDarkMode, isDarkMode }) 
             <div className="hidden md:flex items-center space-x-1">
               <a href="#/" className="px-3 py-2 text-sm font-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-white rounded-md transition-colors">Home</a>
               <a href="#/components" className="px-3 py-2 text-sm font-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-white rounded-md transition-colors">Components</a>
+              <a href="#/about" className="px-3 py-2 text-sm font-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-white rounded-md transition-colors">About</a>
+              <a href="#/faq" className="px-3 py-2 text-sm font-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-white rounded-md transition-colors">FAQ</a>
             </div>
           </div>
           <div className="flex items-center space-x-4">

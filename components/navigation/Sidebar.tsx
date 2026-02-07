@@ -3,27 +3,92 @@ import { Button } from '../ui/Primitives';
 
 const navGroups = [
   {
-    group: '1D Components',
+    group: 'Atomic',
     sections: [
       {
-        title: 'Atomic / Inline',
+        title: 'Foundation / Primitives',
         items: [
           { name: 'Button', id: 'button' },
           { name: 'Input', id: 'input' },
+          { name: 'Label', id: 'label' },
+          { name: 'Icon', id: 'icon' },
           { name: 'Badge', id: 'badge' },
+          { name: 'Avatar', id: 'avatar' },
+          { name: 'Spinner', id: 'spinner' },
+          { name: 'Divider', id: 'divider' },
+          { name: 'Checkbox', id: 'checkbox' },
+          { name: 'Radio', id: 'radio' },
+          { name: 'Switch', id: 'switch' },
+          { name: 'Typography', id: 'typography' },
+          { name: 'Tooltip', id: 'tooltip' },
+          { name: 'Link', id: 'link' },
         ]
       }
     ]
   },
   {
-    group: '3D Components',
+    group: 'Reusable',
     sections: [
       {
-        title: 'Flow / Page-Level',
+        title: 'Molecules',
         items: [
-          { name: 'Modal', id: 'modal' },
+          { name: 'InputField', id: 'input-field' },
+          { name: 'SearchBar', id: 'search-bar' },
+          { name: 'Dropdown', id: 'dropdown' },
           { name: 'Tabs', id: 'tabs' },
+          { name: 'FormField', id: 'form-field' },
+          { name: 'Toast', id: 'toast' },
+          { name: 'Card', id: 'card' },
+          { name: 'Modal', id: 'modal' },
           { name: 'Alert', id: 'alert' },
+          { name: 'Pagination', id: 'pagination' },
+          { name: 'Breadcrumb', id: 'breadcrumb' },
+          { name: 'ToggleGroup', id: 'toggle-group' },
+        ]
+      }
+    ]
+  },
+  {
+    group: 'Composite',
+    sections: [
+      {
+        title: 'Organisms / Patterns',
+        items: [
+          { name: 'Navbar', id: 'navbar' },
+          { name: 'Sidebar', id: 'sidebar' },
+          { name: 'DataTable', id: 'data-table' },
+          { name: 'Pricing Section', id: 'pricing-section' },
+          { name: 'Hero Section', id: 'hero-section' },
+          { name: 'Feature Grid', id: 'feature-grid' },
+          { name: 'Dashboard Stats', id: 'dashboard-stats' },
+          { name: 'User Profile Card', id: 'user-profile-card' },
+          { name: 'Checkout Summary', id: 'checkout-summary' },
+          { name: 'Multi-step Form', id: 'multi-step-form' },
+          { name: 'Settings Panel', id: 'settings-panel' },
+          { name: 'Comments Section', id: 'comments-section' },
+          { name: 'Activity Feed', id: 'activity-feed' },
+          { name: 'Product Grid', id: 'product-grid' },
+        ]
+      }
+    ]
+  },
+  {
+    group: 'App-Level',
+    sections: [
+      {
+        title: 'Templates / Pages',
+        items: [
+          { name: 'Login Page', id: 'login-page' },
+          { name: 'Signup Page', id: 'signup-page' },
+          { name: 'Dashboard Page', id: 'dashboard-page' },
+          { name: 'Analytics Page', id: 'analytics-page' },
+          { name: 'Billing Page', id: 'billing-page' },
+          { name: 'Profile Page', id: 'profile-page' },
+          { name: 'Settings Page', id: 'settings-page' },
+          { name: 'Landing Page', id: 'landing-page' },
+          { name: 'Checkout Page', id: 'checkout-page' },
+          { name: 'Admin Panel', id: 'admin-panel' },
+          { name: 'Blog Page', id: 'blog-page' },
         ]
       }
     ]

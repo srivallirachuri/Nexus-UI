@@ -7,6 +7,7 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { ComponentPage } from './pages/ComponentPage';
 import { ComponentsGalleryPage } from './pages/ComponentsGalleryPage';
+import { FaqPage } from './pages/FaqPage';
 
 
 // Simple Hash-based Router
@@ -47,6 +48,10 @@ const App: React.FC = () => {
 
     if (currentPath === '#/contact') {
       return <ContactPage />;
+    }
+
+    if (currentPath === '#/faq') {
+      return <FaqPage />;
     }
 
     if (currentPath === '#/components') {

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BaseProps, InputProps, CheckboxProps, SwitchProps, TextareaProps, SelectProps, RadioProps, SliderProps } from '../../types';
-import { Button, Heading, Text, Icon, Box } from './Primitives';
+import { Button, Heading, Text, Icon, Box, Spinner } from './Primitives';
 import { Stack, Card } from './Layout';
+import { Alert } from './Composite';
 
 // Note: InputProps is now defined in types.ts
 
@@ -259,62 +260,175 @@ export const FormWrapper: React.FC<{ onSubmit: (e: React.FormEvent) => void; chi
 
 // --- Authentication Forms ---
 
-export const LoginForm: React.FC<{ onSubmit: (data: any) => void }> = ({ onSubmit }) => {
+export const LoginForm: React.FC<{
+  onSubmit: (data: any) => void;
+  onForgotPassword?: () => void;
+  isLoading?: boolean;
+  error?: string;
+}> = ({ onSubmit, onForgotPassword, isLoading, error }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = () => onSubmit({ email, password });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ email, password, rememberMe });
+  };
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
+      {error && <Alert variant="error" className="mb-4">{error}</Alert>}
       <FormField label="Email" htmlFor="login-email" required>
-        <Input id="login-email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <Input
+          id="login-email"
+          type="email"
+          placeholder="you@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          disabled={isLoading}
+        />
       </FormField>
-      <FormField label="Password" htmlFor="login-password" required>
-        <Input id="login-password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      <FormField
+        label="Password"
+        htmlFor="login-password"
+        required
+        rightElement={
+          <button
+            type="button"
+            onClick={onForgotPassword}
+            className="text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+          >
+            Forgot password?
+          </button>
+        }
+      >
+        <Input
+          id="login-password"
+          type="password"
+          placeholder="••••••••"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          disabled={isLoading}
+        />
       </FormField>
       <div className="flex items-center justify-between">
-        <Checkbox label="Remember me" id="remember-me" />
-        <a href="#" className="text-sm font-medium text-primary-600 hover:text-primary-500">Forgot password?</a>
+        <Checkbox
+          id="remember-me"
+          label="Remember me"
+          checked={rememberMe}
+          onChange={(e) => setRememberMe(e.target.checked)}
+        />
       </div>
-      <Button type="submit" fullWidth>Sign in</Button>
+      <Button type="submit" fullWidth isLoading={isLoading} className="mt-2">
+        Sign in
+      </Button>
     </FormWrapper>
   );
 };
 
-export const SignupForm: React.FC<{ onSubmit: (data: any) => void }> = ({ onSubmit }) => {
+export const SignupForm: React.FC<{
+  onSubmit: (data: any) => void;
+  isLoading?: boolean;
+  error?: string;
+}> = ({ onSubmit, isLoading, error }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSubmit = () => onSubmit({ name, email, password });
+  const handleSubmit = () => onSubmit({ name, email, password, confirmPassword });
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
+      {error && <Alert variant="error" className="mb-4">{error}</Alert>}
       <FormField label="Full Name" htmlFor="signup-name" required>
-        <Input id="signup-name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required />
+        <Input
+          id="signup-name"
+          placeholder="John Doe"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          disabled={isLoading}
+        />
       </FormField>
       <FormField label="Email" htmlFor="signup-email" required>
-        <Input id="signup-email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <Input
+          id="signup-email"
+          type="email"
+          placeholder="you@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          disabled={isLoading}
+        />
       </FormField>
       <FormField label="Password" htmlFor="signup-password" required>
-        <Input id="signup-password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <Input
+          id="signup-password"
+          type="password"
+          placeholder="••••••••"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          disabled={isLoading}
+        />
+        <PasswordStrengthMeter password={password} />
       </FormField>
-      <Button type="submit" fullWidth>Create Account</Button>
+      <FormField label="Confirm Password" htmlFor="signup-confirm-password" required>
+        <Input
+          id="signup-confirm-password"
+          type="password"
+          placeholder="••••••••"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+          disabled={isLoading}
+        />
+      </FormField>
+      <Button type="submit" fullWidth isLoading={isLoading}>Create Account</Button>
     </FormWrapper>
   );
 };
 
-export const ForgotPasswordForm: React.FC<{ onSubmit: (data: any) => void }> = ({ onSubmit }) => {
+export const ForgotPasswordForm: React.FC<{
+  onSubmit: (data: any) => void;
+  isLoading?: boolean;
+  error?: string;
+  success?: boolean;
+}> = ({ onSubmit, isLoading, error, success }) => {
   const [email, setEmail] = useState('');
+
+  if (success) {
+    return (
+      <div className="text-center space-y-4">
+        <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center mx-auto">
+          <Icon size="md"><path d="M5 13l4 4L19 7"/></Icon>
+        </div>
+        <Heading level={4}>Check your email</Heading>
+        <Text color="muted">We've sent a password reset link to <span className="font-medium text-neutral-900 dark:text-white">{email}</span>.</Text>
+        <Button variant="outline" fullWidth onClick={() => window.location.reload()}>Back to login</Button>
+      </div>
+    );
+  }
 
   return (
     <FormWrapper onSubmit={() => onSubmit({ email })}>
+      {error && <Alert variant="error" className="mb-4">{error}</Alert>}
       <Text color="muted" className="mb-4 text-sm">Enter your email address and we'll send you a link to reset your password.</Text>
       <FormField label="Email" htmlFor="forgot-email" required>
-        <Input id="forgot-email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <Input
+          id="forgot-email"
+          type="email"
+          placeholder="you@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          disabled={isLoading}
+        />
       </FormField>
-      <Button type="submit" fullWidth>Send Reset Link</Button>
+      <Button type="submit" fullWidth isLoading={isLoading}>Send Reset Link</Button>
       <div className="text-center mt-4">
         <a href="#" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white">Back to login</a>
       </div>
@@ -341,9 +455,28 @@ export const ResetPasswordForm: React.FC<{ onSubmit: (data: any) => void }> = ({
 
 // --- Specialized Inputs ---
 
-export const OTPVerification: React.FC<{ length?: number; onComplete: (code: string) => void }> = ({ length = 6, onComplete }) => {
+export const OTPVerification: React.FC<{
+  length?: number;
+  onComplete: (code: string) => void;
+  onResend?: () => void;
+  isLoading?: boolean;
+  error?: string;
+}> = ({ length = 6, onComplete, onResend, isLoading, error }) => {
   const [otp, setOtp] = useState<string[]>(new Array(length).fill(''));
+  const [timer, setTimer] = useState(30);
   const inputs = React.useRef<(HTMLInputElement | null)[]>([]);
+
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => setTimer(prev => prev - 1), 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timer]);
+
+  // Handle focus on first render
+  useEffect(() => {
+    inputs.current[0]?.focus();
+  }, []);
 
   const handleChange = (element: HTMLInputElement, index: number) => {
     if (isNaN(Number(element.value))) return false;
@@ -362,28 +495,52 @@ export const OTPVerification: React.FC<{ length?: number; onComplete: (code: str
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === "Backspace") {
-      if (!otp[index] && index > 0) {
-        inputs.current[index - 1]?.focus();
-      }
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      inputs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleResend = () => {
+    if (timer === 0) {
+      setTimer(30);
+      onResend?.();
     }
   };
 
   return (
-    <div className="flex gap-2 justify-center">
-      {otp.map((data, index) => (
-        <input
-          key={index}
-          type="text"
-          maxLength={1}
-          ref={(ref) => inputs.current[index] = ref}
-          className="w-10 h-12 text-center text-xl font-bold bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-md focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
-          value={data}
-          onChange={(e) => handleChange(e.target, index)}
-          onKeyDown={(e) => handleKeyDown(e, index)}
-        />
-      ))}
+    <div className="space-y-6">
+      <div className="flex gap-2 justify-center">
+        {otp.map((data, index) => (
+          <input
+            key={index}
+            type="text"
+            maxLength={1}
+            disabled={isLoading}
+            ref={(ref) => inputs.current[index] = ref}
+            className={`w-12 h-14 text-center text-xl font-bold bg-white dark:bg-neutral-900 border rounded-lg outline-none transition-all duration-200
+              ${error ? 'border-red-500 focus:ring-red-500/20' : 'border-neutral-300 dark:border-neutral-700 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10'}
+              ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}
+              shadow-sm
+            `}
+            value={data}
+            onChange={(e) => handleChange(e.target, index)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
+          />
+        ))}
+      </div>
+
+      {error && <p className="text-center text-xs text-red-600 font-medium animate-in fade-in slide-in-from-top-1">{error}</p>}
+
+      <div className="text-center">
+        <button
+          onClick={handleResend}
+          disabled={timer > 0 || isLoading}
+          className={`text-sm font-medium ${timer > 0 ? 'text-neutral-400 cursor-not-allowed' : 'text-primary-600 hover:text-primary-700 underline underline-offset-4'}`}
+        >
+          {timer > 0 ? `Resend code in ${timer}s` : 'Resend verification code'}
+        </button>
+      </div>
     </div>
   );
 };

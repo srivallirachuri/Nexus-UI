@@ -11,11 +11,17 @@ export const AuthLayout: React.FC<{
   logo?: ReactNode;
   title?: string;
   subtitle?: string;
-}> = ({ children, backgroundImage, logo, title, subtitle }) => {
+  isFullPage?: boolean;
+  className?: string;
+}> = ({ children, backgroundImage, logo, title, subtitle, isFullPage = true, className = '' }) => {
+  const containerClasses = isFullPage 
+    ? "min-h-screen flex bg-neutral-50 dark:bg-neutral-950" 
+    : "flex w-full h-full bg-white dark:bg-neutral-900";
+
   return (
-    <div className="min-h-screen flex bg-neutral-50 dark:bg-neutral-950">
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 lg:w-[480px]">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
+    <div className={`${containerClasses} ${className}`}>
+      <div className={`flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 bg-white dark:bg-neutral-900 ${isFullPage ? 'lg:flex-none lg:px-20 xl:px-24 border-r border-neutral-200 dark:border-neutral-800 lg:w-[480px]' : ''}`}>
+        <div className={`mx-auto w-full ${isFullPage ? 'max-w-sm lg:w-96' : 'max-w-md'}`}>
           <div className="mb-8">
              {logo}
              {title && <Heading level={2} className="mt-6">{title}</Heading>}
@@ -24,14 +30,16 @@ export const AuthLayout: React.FC<{
           {children}
         </div>
       </div>
-      <div className="hidden lg:block relative w-0 flex-1 overflow-hidden">
-        <img
-          className="absolute inset-0 h-full w-full object-cover"
-          src={backgroundImage || "https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1908&q=80"}
-          alt="Authorization Background"
-        />
-        <div className="absolute inset-0 bg-primary-900/40 mix-blend-multiply" />
-      </div>
+      {isFullPage && (
+        <div className="hidden lg:block relative w-0 flex-1 overflow-hidden">
+          <img
+            className="absolute inset-0 h-full w-full object-cover"
+            src={backgroundImage || "https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1908&q=80"}
+            alt="Authorization Background"
+          />
+          <div className="absolute inset-0 bg-primary-900/40 mix-blend-multiply" />
+        </div>
+      )}
     </div>
   );
 };

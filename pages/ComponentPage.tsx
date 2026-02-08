@@ -12,11 +12,14 @@ import { AuthLayout, DashboardLayout, HeroSection, FeatureGrid, PricingSection, 
 import { ThemeToggle, CopyToClipboard, CodeBlock, Portal, ResponsiveVisibility, VisuallyHidden, FocusTrap } from '../components/ui/Utilities';
 import { Sidebar } from '../components/navigation/Sidebar';
 import { Navbar } from '../components/navigation/Navbar';
+import { AuthFlow } from '../components/ui/AuthFlow';
+import { UserManager } from '../components/ui/CRUDManager';
+import { AdminDashboard, StatCard, MiniChart, AdvancedTable } from '../components/ui/Dashboard';
 
 // Import full source codes
 import { SOURCES } from '../data/ComponentSources';
 
-interface ComponentDoc {
+export interface ComponentDoc {
   id: string;
   name: string;
   category: 'Atomic' | 'Reusable' | 'Composite' | 'App-level';
@@ -898,6 +901,161 @@ const docs: Record<string, ComponentDoc> = {
     description: 'Content-focused blog layout template.',
     examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border border-dashed flex items-center justify-center">Blog Template Preview</div>, usageCode: `<BlogPage />` }],
     props: []
+  },
+  'auth-flow': {
+    id: 'auth-flow',
+    name: 'Authentication Flow',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'A comprehensive authentication system that handles the entire user lifecycle from sign-in to security verification. It manages internal state for various steps and provides a seamless user experience.',
+    implementationSource: SOURCES.authFlow,
+    examples: [
+      {
+        title: 'Complete Flow',
+        description: 'The full interactive authentication experience starting from the login screen.',
+        render: () => (
+          <div className="max-w-md mx-auto border border-neutral-200 dark:border-neutral-800 rounded-3xl shadow-2xl overflow-hidden h-[640px] relative bg-white dark:bg-neutral-900">
+             <AuthFlow isFullPage={false} />
+          </div>
+        ),
+        usageCode: `<AuthFlow initialStep="login" />`
+      },
+      {
+        title: 'Signup View',
+        description: 'Direct access to the signup screen with password strength validation.',
+        render: () => (
+          <div className="max-w-md mx-auto border border-neutral-200 dark:border-neutral-800 rounded-3xl shadow-2xl overflow-hidden h-[640px] relative bg-white dark:bg-neutral-900">
+             <AuthFlow initialStep="signup" isFullPage={false} />
+          </div>
+        ),
+        usageCode: `<AuthFlow initialStep="signup" />`
+      },
+      {
+        title: 'Password Recovery',
+        description: 'The password reset initiation flow.',
+        render: () => (
+          <div className="max-w-md mx-auto border border-neutral-200 dark:border-neutral-800 rounded-3xl shadow-2xl overflow-hidden h-[480px] relative bg-white dark:bg-neutral-900">
+             <AuthFlow initialStep="forgot-password" isFullPage={false} />
+          </div>
+        ),
+        usageCode: `<AuthFlow initialStep="forgot-password" />`
+      },
+      {
+        title: 'Security Verification',
+        description: 'OTP verification screen with resend logic.',
+        render: () => (
+          <div className="max-w-md mx-auto border border-neutral-200 dark:border-neutral-800 rounded-3xl shadow-2xl overflow-hidden h-[480px] relative bg-white dark:bg-neutral-900">
+             <AuthFlow initialStep="otp" isFullPage={false} />
+          </div>
+        ),
+        usageCode: `<AuthFlow initialStep="otp" />`
+      }
+    ],
+    props: [
+      { name: 'initialStep', type: 'login | signup | forgot-password | otp | success', default: 'login', desc: 'The starting screen of the flow.' },
+      { name: 'onSuccess', type: '(data: any) => void', default: '-', desc: 'Callback invoked after successful authentication.' },
+      { name: 'logo', type: 'ReactNode', default: 'Default Logo', desc: 'Custom logo to display in the layout.' }
+    ]
+  },
+  'admin-dashboard': {
+    id: 'admin-dashboard',
+    name: 'Admin Dashboard',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'A complete, ready-to-use admin dashboard template featuring a collapsible sidebar, utility topbar, KPI cards with trend indicators, and an advanced data table.',
+    implementationSource: SOURCES.adminDashboard,
+    examples: [
+      {
+        title: 'Complete Admin Layout',
+        description: 'The full dashboard experience with sidebar, topbar, and sample content.',
+        render: () => (
+          <div className="w-full h-[600px] border border-neutral-200 dark:border-neutral-800 rounded-3xl overflow-hidden glassmorphism shadow-2xl relative transform-gpu">
+             <div className="absolute inset-0 scale-[0.5] origin-top-left w-[200%] h-[200%]">
+               <AdminDashboard user={{ name: 'Alex Thompson', role: 'System Admin' }}>
+                  <Stack spacing={8}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <StatCard 
+                        stat={{ 
+                          label: 'Total Revenue', 
+                          value: '$128,430', 
+                          trend: { value: 12.5, isUp: true },
+                        }} 
+                      />
+                      <StatCard 
+                        stat={{ 
+                          label: 'Active Users', 
+                          value: '2,842', 
+                          trend: { value: 8.2, isUp: true },
+                        }} 
+                      />
+                      <StatCard 
+                        stat={{ 
+                          label: 'New Orders', 
+                          value: '432', 
+                          trend: { value: 3.1, isUp: false },
+                        }} 
+                      />
+                      <StatCard 
+                        stat={{ 
+                          label: 'Conversion Rate', 
+                          value: '4.8%', 
+                          trend: { value: 0.2, isUp: true },
+                        }} 
+                      />
+                    </div>
+                    <Card className="p-6">
+                      <div className="h-64">
+                        <MiniChart 
+                          type="line" 
+                          data={[30, 45, 32, 60, 55, 80, 75, 90, 85, 100]} 
+                          color="#0ea5e9"
+                          height={200}
+                        />
+                      </div>
+                    </Card>
+                    <AdvancedTable 
+                      columns={[
+                        { key: 'customer', header: 'Customer' },
+                        { key: 'status', header: 'Status', render: (val) => <Badge variant={val === 'Paid' ? 'success' : 'warning'}>{val}</Badge> },
+                        { key: 'amount', header: 'Amount' }
+                      ]}
+                      data={[
+                        { customer: 'Sarah Wilson', status: 'Paid', amount: '$432.00' },
+                        { customer: 'James Miller', status: 'Pending', amount: '$120.50' }
+                      ]}
+                    />
+                  </Stack>
+               </AdminDashboard>
+             </div>
+          </div>
+        ),
+        usageCode: `<AdminDashboard user={user}>\n  <KPICards data={stats} />\n  <Charts data={analytics} />\n  <AdvancedTable columns={cols} data={rows} />\n</AdminDashboard>`
+      }
+    ],
+    props: [
+      { name: 'user', type: '{ name, role, avatar }', default: '-', desc: 'User profile data for the topbar.' },
+      { name: 'isLoading', type: 'boolean', default: 'false', desc: 'Global loading state.' },
+      { name: 'children', type: 'ReactNode', default: '-', desc: 'Main dashboard content.' }
+    ]
+  },
+  'crud-management': {
+    id: 'crud-management',
+    name: 'CRUD Management',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'A complete, production-ready user management system demonstrating full CRUD workflows and permission-aware UI.',
+    implementationSource: SOURCES.crudManagement,
+    examples: [
+      {
+        title: 'User Management Dashboard',
+        description: 'The main interface for managing team members with search, filters, and pagination.',
+        render: () => <UserManager initialRole="Admin" />,
+        usageCode: `<UserManager initialRole="Admin" />`
+      }
+    ],
+    props: [
+      { name: 'initialRole', type: 'Admin | Editor | Viewer', default: 'Admin', desc: 'Starting role for permission simulation.' }
+    ]
   }
 };
 
@@ -1023,6 +1181,9 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
       { name: 'variant', type: 'select', default: 'info', options: ['info', 'success', 'warning', 'danger'] },
       { name: 'title', type: 'string', default: 'Attention' },
       { name: 'children', type: 'string', default: 'This is an alert message.' },
+    ],
+    'crud-management': [
+      { name: 'initialRole', type: 'select', default: 'Admin', options: ['Admin', 'Editor', 'Viewer'] },
     ]
   };
 
@@ -1090,6 +1251,7 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
                                           );
                                           if (componentId === 'tabs') return <Tabs variant={activeProps.variant} items={[{id: '1', label: 'Tab 1', content: 'Content 1'}, {id: '2', label: 'Tab 2', content: 'Content 2'}]} />;
                                           if (componentId === 'alert') return <Alert {...activeProps}>{activeProps.children}</Alert>;
+                                          if (componentId === 'crud-management') return <UserManager {...activeProps} />;
                                           return doc.examples[0].render();
                                       })()}
                                   </div>
@@ -1243,3 +1405,5 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
     </div>
   );
 };
+
+export default ComponentPage;

@@ -20,6 +20,8 @@ import { Sidebar } from '../components/navigation/Sidebar';
 import { 
   HeroSection, FeatureGrid, PricingSection, AuthLayout, DashboardLayout, Footer, Page404, ErrorPage 
 } from '../components/ui/Patterns';
+import { AuthFlow } from '../components/ui/AuthFlow';
+import { UserManager } from '../components/ui/CRUDManager';
 
 export type Category = 'Atomic' | 'Reusable' | 'Composite' | 'App-level';
 
@@ -281,9 +283,77 @@ export const components: ComponentItem[] = [
     subCategory: 'Templates / Pages',
     variants: 2,
     description: 'Full authentication screen.',
-    preview: <div className="flex justify-center scale-75 border rounded-xl bg-white dark:bg-neutral-900 p-6 shadow-2xl"><LoginForm /></div>,
+    preview: <div className="scale-[0.6] origin-top border rounded-xl bg-white dark:bg-neutral-900 shadow-xl overflow-hidden h-[300px] w-full"><LoginForm onSubmit={() => {}} /></div>,
     code: '<AuthLayout><LoginForm /></AuthLayout>',
     info: 'A complete login flow template.'
+  },
+  {
+    id: 'admin-dashboard',
+    name: 'Admin Dashboard',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    variants: 1,
+    description: 'A complete, ready-to-use admin dashboard template with sidebar, topbar, and metrics.',
+    preview: (
+      <div className="w-full h-full bg-neutral-50 dark:bg-neutral-950 rounded-xl overflow-hidden shadow-2xl border border-neutral-200 dark:border-neutral-800 scale-[0.35] origin-top transform-gpu">
+        <div className="flex bg-neutral-50 dark:bg-neutral-950 h-[800px] w-[1400px]">
+          <div className="w-64 bg-neutral-900 h-full p-6 flex flex-col gap-8">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-primary-600 rounded-lg" />
+              <div className="h-4 w-24 bg-white/20 rounded" />
+            </div>
+            <div className="space-y-4">
+              <div className="h-3 w-16 bg-white/10 rounded" />
+              <div className="h-8 w-full bg-white/5 rounded" />
+              <div className="h-8 w-full bg-white/5 rounded" />
+            </div>
+          </div>
+          <div className="flex-1 flex flex-col">
+            <div className="h-16 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between px-8">
+              <div className="h-8 w-64 bg-neutral-100 dark:bg-neutral-800 rounded-lg" />
+              <div className="flex gap-4">
+                <div className="h-8 w-8 bg-neutral-100 dark:bg-neutral-800 rounded-full" />
+                <div className="h-8 w-24 bg-neutral-100 dark:bg-neutral-800 rounded-lg" />
+              </div>
+            </div>
+            <div className="p-8 space-y-8">
+              <div className="grid grid-cols-4 gap-6">
+                <div className="h-32 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm" />
+                <div className="h-32 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm" />
+                <div className="h-32 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm" />
+                <div className="h-32 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm" />
+              </div>
+              <div className="h-96 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm" />
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    code: `import { AdminDashboard, StatCard, MiniChart, AdvancedTable } from "./components/ui/Dashboard";
+
+<AdminDashboard user={{ name: "Jane Doe", role: "Manager" }}>
+  <div className="grid grid-cols-4 gap-6 mb-8">
+    <StatCard stat={{ label: "Total Users", value: "2,543", trend: { value: 12, isUp: true } }} />
+    {/* ... */}
+  </div>
+  <AdvancedTable columns={columns} data={data} />
+</AdminDashboard>`,
+    info: 'A comprehensive dashboard template for administrative interfaces.'
+  },
+  {
+    id: 'auth-flow',
+    name: 'Authentication Flow',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    variants: 5,
+    description: 'A complete, multi-step authentication process including Login, Signup, Reset Password, and MFA.',
+    preview: <div className="scale-[0.5] origin-top h-[350px] overflow-hidden border border-neutral-200 dark:border-neutral-800 rounded-3xl shadow-2xl relative"><AuthFlow isFullPage={false} /></div>,
+    code: `// Comprehensive Authentication Flow
+<AuthFlow 
+  initialStep="login" 
+  onSuccess={(user) => console.log('Logged in:', user)} 
+/>`,
+    info: 'Handles all authentication states: Login (with loading/error), Signup, Forgot Password, OTP Verification, and Success feedback.'
   },
   {
     id: 'landing-page',
@@ -295,5 +365,25 @@ export const components: ComponentItem[] = [
     preview: <div className="scale-[0.4] origin-top border rounded-2xl overflow-hidden bg-white dark:bg-neutral-950 w-full h-[300px]"><Navbar onToggleDarkMode={() => {}} isDarkMode={false} /><div className="pt-20 text-center"><Heading level={1}>Better UI</Heading></div></div>,
     code: '<LandingPage />',
     info: 'Multi-section landing page template.'
+  },
+  {
+    id: 'crud-management',
+    name: 'CRUD Management',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    variants: 1,
+    description: 'A premium, production-ready user management system with full CRUD operations, bulk actions, and permission-aware interfaces.',
+    preview: (
+      <div className="w-full h-full bg-neutral-50 dark:bg-neutral-950 rounded-xl overflow-hidden shadow-2xl border border-neutral-200 dark:border-neutral-800 scale-[0.3] origin-top transform-gpu">
+        <div className="p-8">
+          <UserManager initialRole="Admin" />
+        </div>
+      </div>
+    ),
+    code: `import { UserManager } from "./components/ui/CRUDManager";
+
+// Full CRUD with Permission Simulation
+<UserManager initialRole="Admin" />`,
+    info: 'Comprehensive CRUD lifecycle: Real-time search/sort, field validation, unsaved change detection, bulk actions (delete/status), and permission-based UI states (Admin/Editor/Viewer).'
   }
 ];

@@ -465,40 +465,39 @@ export const Card: React.FC<CardProps> = ({
     </div>
   );
 };`,
-  forms: `import React, { useState } from 'react';
-import { InputProps, CheckboxProps, SwitchProps, TextareaProps, SelectProps, RadioProps, SliderProps } from '../../types';
-import { Button, Heading, Text, Icon, Box } from './Primitives';
+  forms: `import React, { useState, useEffect } from 'react';
+import { BaseProps, InputProps, CheckboxProps, SwitchProps, TextareaProps, SelectProps, RadioProps, SliderProps } from '../../types';
+import { Button, Heading, Text, Icon, Box, Spinner } from './Primitives';
 import { Stack, Card } from './Layout';
+import { Alert } from './Composite';
 
-export const Input: React.FC<InputProps> = ({
-  label,
-  error,
-  helperText,
-  className = '',
-  id,
-  ...props
-}) => {
+export const LoginForm: React.FC<{
+  onSubmit: (data: any) => void;
+  onForgotPassword?: () => void;
+  isLoading?: boolean;
+  error?: string;
+}> = ({ onSubmit, onForgotPassword, isLoading, error }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ email, password, rememberMe });
+  };
+
   return (
-    <div className="w-full space-y-1.5">
-      {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-          {label}
-        </label>
-      )}
-      <input
-        id={id}
-        className={\`
-          block w-full px-3 py-2 bg-white dark:bg-neutral-900 border rounded-md shadow-sm transition duration-200
-          placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500
-          disabled:bg-neutral-50 disabled:text-neutral-500 disabled:cursor-not-allowed
-          \${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-neutral-200 dark:border-neutral-800'}
-          \${className}
-        \`}
-        {...props}
-      />
-      {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
-      {helperText && !error && <p className="text-xs text-neutral-500 mt-1">{helperText}</p>}
-    </div>
+    <FormWrapper onSubmit={handleSubmit}>
+      {error && <Alert variant="error" className="mb-4">{error}</Alert>}
+      <FormField label="Email" htmlFor="login-email" required>
+        <Input id="login-email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={isLoading} />
+      </FormField>
+      <FormField label="Password" htmlFor="login-password" required rightElement={<button type="button" onClick={onForgotPassword} className="text-xs font-semibold text-primary-600">Forgot password?</button>}>
+        <Input id="login-password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required disabled={isLoading} />
+      </FormField>
+      <Checkbox id="remember-me" label="Remember me" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />
+      <Button type="submit" fullWidth isLoading={isLoading}>Sign in</Button>
+    </FormWrapper>
   );
 };`,
   feedback: `import React from 'react';
@@ -593,16 +592,63 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, separator, clas
 import { Heading, Text, Button, Icon, Box } from './Primitives';
 import { Card, Container, Stack } from './Layout';
 
-export const AuthLayout: React.FC<{ children: ReactNode; title?: string }> = ({ children, title }) => {
+export const AuthLayout: React.FC<{ children: ReactNode; title?: string; subtitle?: string; logo?: ReactNode; }> = ({ children, title, subtitle, logo }) => {
   return (
     <div className="min-h-screen flex bg-neutral-50 dark:bg-neutral-950">
       <div className="flex-1 flex flex-col justify-center py-12 px-4 bg-white dark:bg-neutral-900 lg:w-[480px]">
         <div className="mx-auto w-full max-w-sm">
-          {title && <Heading level={2}>{title}</Heading>}
-          <div className="mt-8">{children}</div>
+          <div className="mb-8">{logo}{title && <Heading level={2} className="mt-6">{title}</Heading>}{subtitle && <Text color="muted" className="mt-2">{subtitle}</Text>}</div>
+          {children}
         </div>
       </div>
+      <div className="hidden lg:block relative w-0 flex-1 overflow-hidden">
+        <img className="absolute inset-0 h-full w-full object-cover" src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1908&q=80" alt="Auth Background" />
+      </div>
     </div>
+  );
+};`,
+  authFlow: `import React, { useState } from 'react';
+import { LoginForm, SignupForm, ForgotPasswordForm, OTPVerification, ResetPasswordForm } from './Forms';
+import { AuthLayout } from './Patterns';
+import { Button, Heading, Text, Icon } from './Primitives';
+import { Alert } from './Composite';
+import { Card, Stack } from './Layout';
+import { Skeleton } from './Feedback';
+
+export interface AuthFlowProps {
+  initialStep?: AuthStep;
+  onSuccess?: (data: any) => void;
+  logo?: React.ReactNode;
+  isFullPage?: boolean;
+  className?: string;
+}
+
+export const AuthFlow: React.FC<AuthFlowProps> = ({ 
+  initialStep = 'login', 
+  onSuccess, 
+  logo,
+  isFullPage = true,
+  className = ''
+}) => {
+  const [step, setStep] = useState(initialStep);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [email, setEmail] = useState('');
+
+  const navigateTo = (nextStep) => {
+    setIsTransitioning(true);
+    setTimeout(() => { setStep(nextStep); setIsTransitioning(false); }, 600);
+  };
+
+  return (
+    <AuthLayout 
+      title={step} 
+      logo={logo} 
+      isFullPage={isFullPage} 
+      className={className}
+    >
+      {isTransitioning ? <Stack spacing={4}><Skeleton height="40px" /><Skeleton height="40px" /></Stack> : /* Render Step Implementation */}
+    </AuthLayout>
   );
 };`,
   progressBarJSX: `import React, { forwardRef } from 'react';
@@ -669,5 +715,994 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(({
   border-radius: var(--radius-full);
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: var(--primary-600);
-}`
+}`,
+  adminDashboard: `import React, { useState } from 'react';
+import { Button, Heading, Text, Icon, Avatar, Badge, Spinner, Box } from './Primitives';
+import { Card, Stack, Container } from './Layout';
+import { Input } from './Forms';
+import { Alert, Pagination } from './Composite';
+
+// --- Types ---
+
+export interface DashboardStat {
+  label: string;
+  value: string | number;
+  trend?: {
+    value: number;
+    isUp: boolean;
+  };
+  icon?: React.ReactNode;
+}
+
+// --- Admin Topbar ---
+
+export const AdminTopbar: React.FC<{
+  onMenuClick?: () => void;
+  user?: { name: string; role: string; avatar?: string };
+}> = ({ onMenuClick, user }) => {
+  return (
+    <header className="h-16 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={onMenuClick}
+          className="lg:hidden p-2 -ml-2 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition"
+        >
+          <Icon size="sm"><path d="M4 6h16M4 12h16M4 18h16" /></Icon>
+        </button>
+        <div className="hidden sm:block w-64 lg:w-96">
+          <div className="relative">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400">
+              <Icon size="xs"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></Icon>
+            </span>
+            <input 
+              type="text" 
+              placeholder="Search anything..." 
+              className="block w-full pl-9 pr-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary-500/20 transition"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 sm:gap-4">
+        <Button variant="ghost" size="sm" className="hidden sm:flex text-neutral-500">
+          <Icon size="xs" className="mr-2"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></Icon>
+          New Project
+        </Button>
+        <button className="p-2 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md relative transition">
+          <Icon size="sm"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></Icon>
+          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 border-2 border-white dark:border-neutral-900 rounded-full" />
+        </button>
+        <div className="h-8 w-px bg-neutral-200 dark:border-neutral-800 mx-1 hidden sm:block" />
+        <button className="flex items-center gap-3 p-1 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition">
+          <div className="hidden sm:block text-right">
+            <div className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 leading-none mb-1">{user?.name || 'Jane Doe'}</div>
+            <div className="text-xs text-neutral-500 leading-none">{user?.role || 'Admin'}</div>
+          </div>
+          <Avatar src={user?.avatar} size="sm" name={user?.name || 'Jane Doe'} />
+        </button>
+      </div>
+    </header>
+  );
+};
+
+// --- Stat Card ---
+
+export const StatCard: React.FC<{
+  stat?: DashboardStat;
+  isLoading?: boolean;
+}> = ({ stat, isLoading }) => {
+  if (isLoading) {
+    return (
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <Skeleton variant="circular" width="40px" height="40px" />
+          <Skeleton width="60px" height="20px" />
+        </div>
+        <Skeleton width="100px" height="16px" className="mb-2" />
+        <Skeleton width="140px" height="32px" />
+      </Card>
+    );
+  }
+
+  if (!stat) return null;
+
+  return (
+    <Card className="p-6 group hover:shadow-lg transition-all duration-300 border-neutral-200/60 dark:border-neutral-800/60">
+      <div className="flex items-center justify-between mb-4">
+        <div className="p-2 bg-primary-50 dark:bg-primary-900/20 text-primary-600 rounded-lg group-hover:scale-110 transition-transform">
+          {stat.icon || <Icon size="sm"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></Icon>}
+        </div>
+        {stat.trend && (
+          <Badge variant={stat.trend.isUp ? 'success' : 'danger'} className="gap-1">
+            <Icon size="xs">
+              {stat.trend.isUp ? <path d="M5 15l7-7 7 7" /> : <path d="M19 9l-7 7-7-7" />}
+            </Icon>
+            {Math.abs(stat.trend.value)}%
+          </Badge>
+        )}
+      </div>
+      <Text color="muted" size="sm" className="font-medium uppercase tracking-wider">{stat.label}</Text>
+      <Heading level={2} className="mt-1 text-2xl font-bold">{stat.value}</Heading>
+    </Card>
+  );
+};
+
+// --- Mini Charts ---
+
+export const MiniChart: React.FC<{
+  type?: 'line' | 'bar';
+  data?: number[];
+  isLoading?: boolean;
+  color?: string;
+  height?: number;
+}> = ({ type = 'line', data = [], isLoading, color = 'currentColor', height = 60 }) => {
+  if (isLoading) {
+    return <Skeleton width="100%" height={\`\${height}px\`} />;
+  }
+
+  if (data.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-4 h-[60px] bg-neutral-50 dark:bg-neutral-800/50 rounded-lg border border-dashed border-neutral-200 dark:border-neutral-800">
+        <Text size="xs" color="muted">No data</Text>
+      </div>
+    );
+  }
+
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+  const padding = 5;
+  const width = 200;
+  
+  const points = data.map((d, i) => ({
+    x: (i / (data.length - 1)) * width,
+    y: height - ((d - min) / range) * (height - padding * 2) - padding
+  }));
+
+  if (type === 'line') {
+    const pathData = points.length > 0 ? \`M \${points.map(p => \`\${p.x},\${p.y}\`).join(' L ')}\` : '';
+    const areaData = pathData ? \`\${pathData} L \${width},\${height} L 0,\${height} Z\` : '';
+
+    return (
+      <svg width="100%" height={height} viewBox={\`0 0 \${width} \${height}\`} preserveAspectRatio="none" className="overflow-visible">
+        <defs>
+          <linearGradient id="chart-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={color} stopOpacity="0.2" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={areaData} fill="url(#chart-gradient)" />
+        <path d={pathData} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  return (
+    <div className="flex items-end gap-1 w-full" style={{ height }}>
+      {data.map((d, i) => (
+        <div 
+          key={i}
+          className="flex-1 rounded-t-sm"
+          style={{ 
+            height: \`\${((d - min) / range) * 100}%\`,
+            backgroundColor: color,
+            opacity: 0.6 + (i / data.length) * 0.4
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// --- Advanced Table ---
+
+export interface TableColumn {
+  key: string;
+  header: string;
+  sortable?: boolean;
+  render?: (value: any, row: any) => React.ReactNode;
+}
+
+export const AdvancedTable: React.FC<{
+  columns: TableColumn[];
+  data: any[];
+  isLoading?: boolean;
+  error?: string;
+  onSort?: (key: string) => void;
+  selection?: any[];
+  onSelectionChange?: (selected: any[]) => void;
+}> = ({ columns, data, isLoading, error, onSort, selection = [], onSelectionChange }) => {
+  if (error) {
+    return <Alert variant="danger" title="Error Loading Data">{error}</Alert>;
+  }
+
+  return (
+    <div className="w-full overflow-hidden border border-neutral-200 dark:border-neutral-800 rounded-xl bg-white dark:bg-neutral-900 shadow-sm">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm whitespace-nowrap">
+          <thead className="bg-neutral-50 dark:bg-neutral-950/50 border-b border-neutral-200 dark:border-neutral-800">
+            <tr>
+              {onSelectionChange && (
+                <th className="px-6 py-4 w-10">
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
+                    checked={data.length > 0 && selection.length === data.length}
+                    onChange={(e) => onSelectionChange(e.target.checked ? data : [])}
+                  />
+                </th>
+              )}
+              {columns.map((col) => (
+                <th 
+                  key={col.key} 
+                  className={\`px-6 py-4 font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-tight \${col.sortable ? 'cursor-pointer hover:text-neutral-900 dark:hover:text-neutral-100' : ''}\`}
+                  onClick={() => col.sortable && onSort?.(col.key)}
+                >
+                  <div className="flex items-center gap-2">
+                    {col.header}
+                    {col.sortable && <Icon size="xs"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></Icon>}
+                  </div>
+                </th>
+              ))}
+              <th className="px-6 py-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <tr key={i}>
+                  {onSelectionChange && <td className="px-6 py-4"><Skeleton width="16px" height="16px" /></td>}
+                  {columns.map((_, j) => (
+                    <td key={j} className="px-6 py-4"><Skeleton width="80%" height="16px" /></td>
+                  ))}
+                  <td className="px-6 py-4"><Skeleton width="40px" height="16px" className="ml-auto" /></td>
+                </tr>
+              ))
+            ) : data.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length + (onSelectionChange ? 2 : 1)} className="px-6 py-12 text-center">
+                  <Stack items="center" spacing={2}>
+                    <div className="p-3 bg-neutral-100 dark:bg-neutral-800 rounded-full text-neutral-400">
+                      <Icon size="lg"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></Icon>
+                    </div>
+                    <Text className="font-semibold text-neutral-900 dark:text-neutral-100">No results found</Text>
+                    <Text color="muted" size="sm">Try adjusting your filters or search query</Text>
+                  </Stack>
+                </td>
+              </tr>
+            ) : (
+              data.map((row, i) => (
+                <tr key={i} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors">
+                  {onSelectionChange && (
+                    <td className="px-6 py-4">
+                      <input 
+                        type="checkbox" 
+                        className="rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
+                        checked={selection.includes(row)}
+                        onChange={(e) => {
+                          const newSelection = e.target.checked 
+                            ? [...selection, row]
+                            : selection.filter(s => s !== row);
+                          onSelectionChange(newSelection);
+                        }}
+                      />
+                    </td>
+                  )}
+                  {columns.map((col) => (
+                    <td key={col.key} className="px-6 py-4 text-neutral-700 dark:text-neutral-300">
+                      {col.render ? col.render(row[col.key], row) : row[col.key]}
+                    </td>
+                  ))}
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex justify-end gap-1">
+                      <Button variant="ghost" size="xs">Edit</Button>
+                      <Button variant="ghost" size="xs" className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">Delete</Button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+// --- Admin Sidebar ---
+
+export const AdminSidebar: React.FC<{
+  isCollapsed?: boolean;
+  onToggle?: () => void;
+  activeId?: string;
+}> = ({ isCollapsed, onToggle, activeId }) => {
+  const navItems = [
+    { group: 'Overview', items: [
+      { id: 'dashboard', label: 'Dashboard', icon: <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /> },
+      { id: 'analytics', label: 'Analytics', icon: <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /> },
+    ]},
+    { group: 'Management', items: [
+      { id: 'users', label: 'Users', icon: <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /> },
+      { id: 'projects', label: 'Projects', icon: <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /> },
+      { id: 'billing', label: 'Billing', icon: <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /> },
+    ]},
+    { group: 'Support', items: [
+      { id: 'tickets', label: 'Tickets', icon: <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /> },
+      { id: 'settings', label: 'Settings', icon: <><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></> },
+    ]}
+  ];
+
+  return (
+    <aside className={\`bg-neutral-900 text-white h-screen sticky top-0 z-40 transition-all duration-300 flex flex-col \${isCollapsed ? 'w-20' : 'w-64'}\`}>
+      <div className="h-16 flex items-center px-6 gap-3 border-b border-white/10 shrink-0 overflow-hidden">
+        <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center shrink-0">
+          <div className="w-4 h-4 bg-white rounded-sm rotate-45" />
+        </div>
+        {!isCollapsed && <span className="font-bold text-xl tracking-tight whitespace-nowrap">Admin<span className="text-primary-500">Box</span></span>}
+      </div>
+
+      <div className="flex-1 overflow-y-auto py-6 px-3 space-y-8 scrollbar-hide">
+        {navItems.map((group) => (
+          <div key={group.group}>
+            {!isCollapsed && (
+              <h4 className="px-3 mb-3 text-[10px] font-bold text-neutral-500 uppercase tracking-widest whitespace-nowrap">
+                {group.group}
+              </h4>
+            )}
+            <ul className="space-y-1">
+              {group.items.map((item) => {
+                const isActive = activeId === item.id;
+                return (
+                  <li key={item.id}>
+                    <button 
+                      className={\`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group relative
+                        \${isActive ? 'bg-primary-600 text-white' : 'text-neutral-400 hover:text-white hover:bg-white/5'}
+                      \`}
+                    >
+                      <Icon size="sm" className={isActive ? 'text-white' : 'text-neutral-500 group-hover:text-white'}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{item.icon}</svg>
+                      </Icon>
+                      {!isCollapsed && <span className="text-sm font-medium">{item.label}</span>}
+                      {isCollapsed && (
+                        <div className="absolute left-14 bg-neutral-900 border border-white/10 text-white text-xs px-2 py-1.5 rounded opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 pointer-events-none transition-all duration-200 whitespace-nowrap z-50 shadow-xl">
+                          {item.label}
+                        </div>
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div className="p-4 border-t border-white/10 shrink-0">
+        <button 
+          onClick={onToggle}
+          className="w-full flex items-center justify-center p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-neutral-400 hover:text-white"
+        >
+          <Icon size="sm" className={\`transition-transform duration-300 \${isCollapsed ? 'rotate-180' : ''}\`}>
+            <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+          </Icon>
+        </button>
+      </div>
+    </aside>
+  );
+};
+
+// --- Admin Dashboard (Main Orchestrator) ---
+
+export const AdminDashboard: React.FC<{
+  children?: React.ReactNode;
+  user?: any;
+  isLoading?: boolean;
+}> = ({ children, user, isLoading }) => {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  return (
+    <div className="flex bg-neutral-50 dark:bg-neutral-950 min-h-screen">
+      <AdminSidebar 
+        isCollapsed={isSidebarCollapsed} 
+        onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} 
+        activeId="dashboard"
+      />
+      
+      <div className="flex-1 flex flex-col min-w-0">
+        <AdminTopbar 
+          onMenuClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          user={user}
+        />
+        
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+          {isLoading ? (
+            <Stack spacing={8}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <StatCard isLoading />
+                <StatCard isLoading />
+                <StatCard isLoading />
+                <StatCard isLoading />
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-2 p-6 h-80 flex flex-col gap-4">
+                  <Skeleton width="150px" height="24px" />
+                  <Skeleton width="100%" className="flex-1" />
+                </Card>
+                <Card className="p-6 h-80 flex flex-col gap-4">
+                  <Skeleton width="150px" height="24px" />
+                  <Skeleton width="100%" className="flex-1" />
+                </Card>
+              </div>
+              <Skeleton width="100%" height="400px" />
+            </Stack>
+          ) : (
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+              {children}
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+};`,
+  crudManagement: `import React, { useState, useMemo, useEffect } from 'react';
+import { 
+  Button, 
+  Heading, 
+  Text, 
+  Icon, 
+  Avatar, 
+  Badge, 
+  IconButton, 
+  Box, 
+  Flex,
+  BadgeProps
+} from './Primitives';
+import { Card, Stack, Container } from './Layout';
+import { Input, Select, Checkbox, Label } from './Forms';
+import { 
+  Modal, 
+  Drawer, 
+  Table, 
+  Pagination, 
+  Alert, 
+  Dropdown,
+  Tabs,
+  Tooltip
+} from './Composite';
+
+// --- Types ---
+
+export type UserRole = 'Admin' | 'Editor' | 'Viewer';
+export type UserStatus = 'Active' | 'Inactive' | 'Pending';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  status: UserStatus;
+  lastActive: string;
+  avatar?: string;
+}
+
+export interface PermissionSet {
+  canCreate: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+  canBulkAction: boolean;
+}
+
+const ROLE_PERMISSIONS: Record<UserRole, PermissionSet> = {
+  Admin: { canCreate: true, canEdit: true, canDelete: true, canBulkAction: true },
+  Editor: { canCreate: true, canEdit: true, canDelete: false, canBulkAction: true },
+  Viewer: { canCreate: false, canEdit: false, canDelete: false, canBulkAction: false },
+};
+
+// --- Mock Data ---
+
+const INITIAL_USERS: User[] = [
+  { id: '1', name: 'Alex Thompson', email: 'alex.t@example.com', role: 'Admin', status: 'Active', lastActive: '2 mins ago' },
+  { id: '2', name: 'Sarah Chen', email: 'sarah.c@example.com', role: 'Editor', status: 'Active', lastActive: '1 hour ago' },
+  { id: '3', name: 'Michael Ross', email: 'm.ross@example.com', role: 'Viewer', status: 'Pending', lastActive: 'Never' },
+  { id: '4', name: 'Elena Rodriguez', email: 'elena.r@example.com', role: 'Editor', status: 'Inactive', lastActive: '2 days ago' },
+  { id: '5', name: 'David Kim', email: 'd.kim@example.com', role: 'Viewer', status: 'Active', lastActive: '5 mins ago' },
+  { id: '6', name: 'Jessica Bloom', email: 'j.bloom@example.com', role: 'Editor', status: 'Active', lastActive: '12 mins ago' },
+  { id: '7', name: 'Robert Vance', email: 'r.vance@example.com', role: 'Viewer', status: 'Inactive', lastActive: '3 days ago' },
+];
+
+// --- Components ---
+
+export const UserManager: React.FC<{
+  initialRole?: UserRole;
+}> = ({ initialRole = 'Admin' }) => {
+  const [users, setUsers] = useState<User[]>(INITIAL_USERS);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('All');
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  
+  // Premium Features
+  const [currentUserRole, setCurrentUserRole] = useState<UserRole>(initialRole);
+  const [sortConfig, setSortConfig] = useState<{ key: keyof User, direction: 'asc' | 'desc' } | null>({ key: 'name', direction: 'asc' });
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [isDirty, setIsDirty] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error' | 'info', message: string } | null>(null);
+
+  const permissions = ROLE_PERMISSIONS[currentUserRole];
+
+  // Auto-hide feedback
+  useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => setFeedback(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
+
+  // Logic: Filtering & Sorting & Pagination
+  const { paginatedUsers, totalItems, totalPages } = useMemo(() => {
+    let filtered = users.filter(user => {
+      const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                           user.email.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === 'All' || user.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+
+    if (sortConfig) {
+      filtered.sort((a, b) => {
+        const valA = a[sortConfig.key] || '';
+        const valB = b[sortConfig.key] || '';
+        if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return {
+      paginatedUsers: filtered.slice(startIndex, startIndex + itemsPerPage),
+      totalItems: filtered.length,
+      totalPages: Math.ceil(filtered.length / itemsPerPage)
+    };
+  }, [users, searchQuery, statusFilter, sortConfig, currentPage]);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter]);
+
+  // Actions
+  const handleSort = (key: keyof User) => {
+    setSortConfig(prev => {
+      if (prev?.key === key) {
+        return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
+      }
+      return { key, direction: 'asc' };
+    });
+  };
+
+  const handleCreate = () => {
+    setEditingUser(null);
+    setValidationErrors({});
+    setIsDirty(false);
+    setIsFormOpen(true);
+  };
+
+  const handleEdit = (user: User) => {
+    if (!permissions.canEdit) return;
+    setEditingUser(user);
+    setValidationErrors({});
+    setIsDirty(false);
+    setIsFormOpen(true);
+  };
+
+  const validateForm = (data: Partial<User>) => {
+    const errors: Record<string, string> = {};
+    if (!data.name?.trim()) errors.name = 'Name is required';
+    if (!data.email?.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      errors.email = 'Invalid email format';
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const data = {
+      name: formData.get('userName') as string,
+      email: formData.get('userEmail') as string,
+      role: formData.get('userRole') as UserRole,
+    };
+
+    if (!validateForm(data)) return;
+
+    setIsSubmitting(true);
+    // Simulate API call
+    setTimeout(() => {
+      if (editingUser) {
+        setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, ...data } : u));
+        setFeedback({ type: 'success', message: \`User \${data.name} updated successfully\` });
+      } else {
+        const newUser: User = {
+          id: Math.random().toString(36).substr(2, 9),
+          name: data.name,
+          email: data.email,
+          role: data.role,
+          status: 'Active',
+          lastActive: 'Just now',
+        };
+        setUsers(prev => [newUser, ...prev]);
+        setFeedback({ type: 'success', message: \`New user \${data.name} created\` });
+      }
+      setIsFormOpen(false);
+      setIsSubmitting(false);
+    }, 800);
+  };
+
+  const handleDeleteClick = (user: User) => {
+    if (!permissions.canDelete) return;
+    setUserToDelete(user);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (!userToDelete) return;
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setUsers(prev => prev.filter(u => u.id !== userToDelete.id));
+      setFeedback({ type: 'error', message: \`User \${userToDelete.name} deleted\` });
+      setIsDeleteModalOpen(false);
+      setUserToDelete(null);
+      setIsSubmitting(false);
+    }, 600);
+  };
+
+  const handleBulkDelete = () => {
+    if (!permissions.canDelete) return;
+    if (window.confirm(\`Are you sure you want to delete \${selectedIds.length} users?\`)) {
+      setUsers(prev => prev.filter(u => !selectedIds.includes(u.id)));
+      setFeedback({ type: 'error', message: \`\${selectedIds.length} users removed\` });
+      setSelectedIds([]);
+    }
+  };
+
+  const handleBulkStatusUpdate = (status: UserStatus) => {
+    setUsers(prev => prev.map(u => selectedIds.includes(u.id) ? { ...u, status } : u));
+    setFeedback({ type: 'success', message: \`Updated \${selectedIds.length} users to \${status}\` });
+    setSelectedIds([]);
+  };
+
+  return (
+    <Stack spacing={6} className="w-full">
+      {/* Simulation Banner */}
+      <Alert variant="info" className="border-primary-100 bg-primary-50/50">
+        <Flex justify="between" align="center" className="w-full">
+          <Flex gap={2} align="center">
+            <Icon size="xs"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></Icon>
+            <Text size="sm" className="font-medium">Role Simulation Mode:</Text>
+          </Flex>
+          <Flex gap={2}>
+            {(['Admin', 'Editor', 'Viewer'] as UserRole[]).map(role => (
+              <Button 
+                key={role} 
+                size="xs" 
+                variant={currentUserRole === role ? 'primary' : 'outline'}
+                onClick={() => setCurrentUserRole(role)}
+                className="py-1"
+              >
+                {role}
+              </Button>
+            ))}
+          </Flex>
+        </Flex>
+      </Alert>
+
+      {feedback && (
+        <div className="fixed top-24 right-8 z-50 animate-in fade-in slide-in-from-right-8">
+          <Alert variant={feedback.type === 'success' ? 'success' : feedback.type === 'error' ? 'danger' : 'info'} title={feedback.message} onClose={() => setFeedback(null)} />
+        </div>
+      )}
+
+      {/* Header & Controls */}
+      <Flex justify="between" align="center" className="flex-wrap gap-4 px-1">
+        <div>
+          <Heading level={2}>Team Management</Heading>
+          <Text color="muted">Configure roles and permissions for your organization.</Text>
+        </div>
+        <Tooltip content={!permissions.canCreate ? "You don't have permission to create users" : ""}>
+          <Button 
+            variant="primary" 
+            onClick={handleCreate} 
+            disabled={!permissions.canCreate}
+            className="shadow-lg shadow-primary-500/20"
+          >
+            <Icon size="xs" className="mr-2"><path d="M12 4v16m8-8H4" /></Icon>
+            Create Member
+          </Button>
+        </Tooltip>
+      </Flex>
+
+      {/* Filters & Bulk Actions */}
+      <Card className="p-4 border-neutral-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm">
+        <Flex justify="between" align="center" className="flex-wrap gap-4">
+          <Flex gap={4} align="center" className="flex-1 min-w-[300px]">
+            <div className="relative flex-1">
+              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400">
+                <Icon size="xs"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></Icon>
+              </span>
+              <Input 
+                placeholder="Search by name or email..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-10"
+              />
+            </div>
+            <Select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              options={[
+                { label: 'All Status', value: 'All' },
+                { label: 'Active', value: 'Active' },
+                { label: 'Inactive', value: 'Inactive' },
+                { label: 'Pending', value: 'Pending' },
+              ]}
+              className="w-44 h-10"
+            />
+          </Flex>
+
+          {selectedIds.length > 0 && permissions.canBulkAction && (
+            <Flex align="center" gap={3} className="animate-in fade-in slide-in-from-right-4 bg-primary-50 dark:bg-primary-900/10 p-1.5 rounded-lg border border-primary-200/50 dark:border-primary-800/50">
+              <Text size="sm" className="font-semibold text-primary-600 px-2 border-r border-primary-200 dark:border-primary-800">
+                \${selectedIds.length} users
+              </Text>
+              <Dropdown
+                trigger={<Button variant="ghost" size="sm" className="text-primary-700">Actions</Button>}
+                items={[
+                  { label: 'Activate All', onClick: () => handleBulkStatusUpdate('Active'), icon: <Icon size="xs"><path d="M5 13l4 4L19 7" /></Icon> },
+                  { label: 'Deactivate All', onClick: () => handleBulkStatusUpdate('Inactive'), icon: <Icon size="xs"><path d="M6 18L18 6M6 6l12 12" /></Icon> },
+                  { label: 'Delete Selected', onClick: handleBulkDelete, danger: true, icon: <Icon size="xs"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></Icon> }
+                ]}
+              />
+            </Flex>
+          )}
+        </Flex>
+      </Card>
+
+      {/* Main Table */}
+      <div className="overflow-hidden border border-neutral-200 dark:border-neutral-800 rounded-2xl bg-white dark:bg-neutral-950 shadow-xl shadow-neutral-200/50 dark:shadow-none">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead className="bg-neutral-50 dark:bg-neutral-900/50 border-b border-neutral-200 dark:border-neutral-800 text-neutral-500 font-bold uppercase tracking-wider text-[11px]">
+              <tr>
+                <th className="px-6 py-4 w-10">
+                  <Checkbox 
+                    checked={selectedIds.length > 0 && selectedIds.length === paginatedUsers.length}
+                    onChange={() => {
+                      if (selectedIds.length === paginatedUsers.length) setSelectedIds([]);
+                      else setSelectedIds(paginatedUsers.map(u => u.id));
+                    }}
+                  />
+                </th>
+                <th className="px-6 py-4 cursor-pointer hover:text-primary-600 transition" onClick={() => handleSort('name')}>
+                  <Flex align="center" gap={1}>
+                    Member {sortConfig?.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                  </Flex>
+                </th>
+                <th className="px-6 py-4 cursor-pointer hover:text-primary-600 transition" onClick={() => handleSort('role')}>
+                  <Flex align="center" gap={1}>
+                    Role {sortConfig?.key === 'role' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                  </Flex>
+                </th>
+                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4">Last Active</th>
+                <th className="px-6 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-200/80 dark:divide-neutral-800/80">
+              {paginatedUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-24 text-center">
+                    <Stack align="center" spacing={4}>
+                      <div className="w-16 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-full flex items-center justify-center text-neutral-300">
+                        <Icon size="lg"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></Icon>
+                      </div>
+                      <div>
+                        <Text className="font-bold text-lg">No results found</Text>
+                        <Text color="muted">We couldn't find any members matching your criteria.</Text>
+                      </div>
+                    </Stack>
+                  </td>
+                </tr>
+              ) : (
+                paginatedUsers.map((user) => (
+                  <tr key={user.id} className="hover:bg-neutral-50/50 dark:hover:bg-neutral-900/50 transition-colors group">
+                    <td className="px-6 py-4">
+                      <Checkbox 
+                        checked={selectedIds.includes(user.id)}
+                        onChange={() => {
+                          setSelectedIds(prev => prev.includes(user.id) ? prev.filter(i => i !== user.id) : [...prev, user.id]);
+                        }}
+                      />
+                    </td>
+                    <td className="px-6 py-4">
+                      <Flex gap={3} align="center">
+                        <Avatar name={user.name} size="sm" src={user.avatar} className="border-2 border-white dark:border-neutral-800 shadow-sm" />
+                        <div>
+                          <Text className="font-bold text-neutral-900 dark:text-neutral-100">{user.name}</Text>
+                          <Text size="xs" color="muted">{user.email}</Text>
+                        </div>
+                      </Flex>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Flex gap={2} align="center">
+                        <span className={\`w-2 h-2 rounded-full \${user.role === 'Admin' ? 'bg-indigo-500' : user.role === 'Editor' ? 'bg-emerald-500' : 'bg-neutral-400'}\`} />
+                        <Text size="sm" weight="medium">{user.role}</Text>
+                      </Flex>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Badge variant={
+                        user.status === 'Active' ? 'success' : 
+                        user.status === 'Inactive' ? 'danger' : 'warning'
+                      }>
+                        {user.status}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Text size="sm" color="muted">{user.lastActive}</Text>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <Flex gap={1} justify="end" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Tooltip content={!permissions.canEdit ? "No permission to edit" : "Edit Member"}>
+                          <IconButton 
+                            size="sm" 
+                            variant="ghost" 
+                            onClick={() => handleEdit(user)}
+                            disabled={!permissions.canEdit}
+                          >
+                            <Icon size="xs"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></Icon>
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip content={!permissions.canDelete ? "No permission to delete" : "Remove Member"}>
+                          <IconButton 
+                            size="sm" 
+                            variant="ghost" 
+                            className="text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"
+                            onClick={() => handleDeleteClick(user)}
+                            disabled={!permissions.canDelete}
+                          >
+                            <Icon size="xs"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></Icon>
+                          </IconButton>
+                        </Tooltip>
+                      </Flex>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="p-4 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 flex items-center justify-between">
+          <Text size="sm" color="muted">Showing <span className="font-semibold text-neutral-900 dark:text-neutral-100">{paginatedUsers.length}</span> of <span className="font-semibold text-neutral-900 dark:text-neutral-100">{totalItems}</span> members</Text>
+          <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
+        </div>
+      </div>
+
+      {/* Create/Edit Drawer */}
+      <Drawer
+        isOpen={isFormOpen}
+        onClose={() => {
+          if (isDirty && !window.confirm("You have unsaved changes. Are you sure you want to close?")) return;
+          setIsFormOpen(false);
+        }}
+        title={editingUser ? 'Edit Member Profile' : 'Invite New Member'}
+        size="md"
+      >
+        <form onSubmit={handleFormSubmit} onChange={() => setIsDirty(true)}>
+          <Stack spacing={6} className="p-8">
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="userName">Full Name</Label>
+                <Input 
+                  id="userName" 
+                  name="userName" 
+                  defaultValue={editingUser?.name} 
+                  placeholder="e.g. Alex Thompson"
+                  error={validationErrors.name}
+                  className={validationErrors.name ? 'border-red-500' : ''}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="userEmail">Email Address</Label>
+                <Input 
+                  id="userEmail" 
+                  name="userEmail" 
+                  type="email" 
+                  defaultValue={editingUser?.email} 
+                  placeholder="name@company.com" 
+                  error={validationErrors.email}
+                  className={validationErrors.email ? 'border-red-500' : ''}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="userRole">Access Level</Label>
+                <Select 
+                  id="userRole" 
+                  name="userRole" 
+                  defaultValue={editingUser?.role || 'Viewer'}
+                  options={[
+                    { label: 'Administrator (Full Access)', value: 'Admin' },
+                    { label: 'Editor (Restricted Write)', value: 'Editor' },
+                    { label: 'Viewer (Read Only)', value: 'Viewer' },
+                  ]}
+                />
+              </div>
+            </div>
+
+            {isDirty && (
+              <Alert variant="warning" size="sm" className="mb-2">
+                <Flex align="center" gap={2}>
+                  <Icon size="xs"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></Icon>
+                  <Text size="xs">You have unsaved changes</Text>
+                </Flex>
+              </Alert>
+            )}
+
+            <Flex justify="end" gap={3} className="pt-8 border-t border-neutral-100 dark:border-neutral-800 mt-4">
+              <Button variant="ghost" onClick={() => setIsFormOpen(false)} type="button">Cancel</Button>
+              <Button 
+                variant="primary" 
+                type="submit" 
+                disabled={isSubmitting || (editingUser && !permissions.canEdit)}
+                className="min-w-[120px] shadow-lg shadow-primary-500/10"
+              >
+                {isSubmitting ? 'Processing...' : (editingUser ? 'Save Updates' : 'Send Invitation')}
+              </Button>
+            </Flex>
+          </Stack>
+        </form>
+      </Drawer>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Remove Member Access"
+        size="sm"
+      >
+        <Stack spacing={6} className="p-8">
+          <div className="w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-600 mb-2">
+            <Icon size="md"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></Icon>
+          </div>
+          <div className="space-y-2">
+            <Text className="font-bold text-lg">Are you absolutely sure?</Text>
+            <Text color="muted">
+              You are about to remove <span className="font-bold text-neutral-900 dark:text-neutral-100">{userToDelete?.name}</span> from the organization. They will lose all access to shared projects.
+            </Text>
+          </div>
+          <Flex justify="end" gap={3} className="mt-2">
+            <Button variant="ghost" onClick={() => setIsDeleteModalOpen(false)}>Nevermind</Button>
+            <Button 
+              variant="danger" 
+              onClick={confirmDelete} 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Removing...' : 'Confirm Removal'}
+            </Button>
+          </Flex>
+        </Stack>
+      </Modal>
+    </Stack>
+  );
+};`
 };

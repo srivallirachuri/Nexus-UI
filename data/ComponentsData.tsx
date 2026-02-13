@@ -24,6 +24,8 @@ import {
 import { AuthFlow } from '../components/ui/AuthFlow';
 import { UserManager } from '../components/ui/CRUDManager';
 import { Orbit } from '../components/ui/Orbit';
+import { PillNav } from '../components/ui/PillNav';
+
 
 export type Category = 'Atomic' | 'Reusable' | 'Composite' | 'App-level';
 
@@ -445,6 +447,36 @@ export const components: ComponentItem[] = [
     code: '<TargetCursor padding={8} stiffness={400} />',
     info: 'A precision reticle cursor system that automatically snaps to elements marked with data-cursor-target. It adjusts its dimensions to match the target element and features smooth, high-frequency spring physics.'
   },
+  {
+    id: 'pill-nav',
+    name: 'Pill Navigation',
+    category: 'Reusable',
+    subCategory: 'Molecules',
+    variants: 3,
+    description: 'A fluid navigation component with animated active state that magnetically glides between items.',
+    preview: (
+        <div className="w-full h-40 flex flex-col items-center justify-center gap-8 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800">
+            <PillNav defaultValue="home">
+                <PillNav.Item value="home">Home</PillNav.Item>
+                <PillNav.Item value="projects">Projects</PillNav.Item>
+                <PillNav.Item value="about">About</PillNav.Item>
+                <PillNav.Item value="contact" disabled>Contact</PillNav.Item>
+            </PillNav>
+            
+            <PillNav defaultValue="design" animationType="elastic">
+                <PillNav.Item value="code">Code</PillNav.Item>
+                <PillNav.Item value="design">Design</PillNav.Item>
+                <PillNav.Item value="manage">Manage</PillNav.Item>
+            </PillNav>
+        </div>
+    ),
+    code: `<PillNav defaultValue="home">
+  <PillNav.Item value="home">Home</PillNav.Item>
+  <PillNav.Item value="projects">Projects</PillNav.Item>
+  <PillNav.Item value="about">About</PillNav.Item>
+</PillNav>`,
+    info: 'Use for segmented controls or page navigation. Supports spring, smooth, and elastic animations with keyboard support.'
+  },
 
   // --- COMPOSITE (Organisms / Patterns) ---
   {
@@ -500,6 +532,7 @@ export const components: ComponentItem[] = [
     code: '<Wizard steps={steps} currentStep={1} />',
     info: 'Professional multi-step navigation for complex flows.'
   },
+
 
   // --- APP-LEVEL (Templates / Pages) ---
   {

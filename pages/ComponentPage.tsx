@@ -17,6 +17,9 @@ import { UserManager } from '../components/ui/CRUDManager';
 import { AdminDashboard, StatCard, MiniChart, AdvancedTable } from '../components/ui/Dashboard';
 import { Orbit } from '../components/ui/Orbit';
 import { TargetCursor } from '../components/ui/TargetCursor';
+import { ScrollStack } from '../components/ui/ScrollStack';
+import { PillNav } from '../components/ui/PillNav';
+
 
 // Import full source codes
 import { SOURCES } from '../data/ComponentSources';
@@ -766,6 +769,92 @@ const docs: Record<string, ComponentDoc> = {
       { name: 'className', type: 'string', default: '""', desc: 'Container class.' }
     ]
   },
+  'pill-nav': {
+    id: 'pill-nav',
+    name: 'Pill Navigation',
+    category: 'Reusable',
+    subCategory: 'Molecules',
+    description: 'A fluid navigation component with animated active state that magnetically glides between items. Supports keyboard navigation and multiple animation styles.',
+    implementationSource: SOURCES.pillNav,
+    examples: [
+      {
+        title: 'Basic Usage',
+        description: 'Default spring animation with horizontal orientation.',
+        render: () => (
+          <div className="py-4">
+            <PillNav defaultValue="home">
+              <PillNav.Item value="home">Home</PillNav.Item>
+              <PillNav.Item value="projects">Projects</PillNav.Item>
+              <PillNav.Item value="about">About</PillNav.Item>
+              <PillNav.Item value="contact">Contact</PillNav.Item>
+            </PillNav>
+          </div>
+        ),
+        usageCode: `<PillNav defaultValue="home">
+  <PillNav.Item value="home">Home</PillNav.Item>
+  <PillNav.Item value="projects">Projects</PillNav.Item>
+  <PillNav.Item value="about">About</PillNav.Item>
+  <PillNav.Item value="contact">Contact</PillNav.Item>
+</PillNav>`
+      },
+      {
+        title: 'Animation Types',
+        description: 'Choose between spring, smooth, and elastic (bouncy) transitions.',
+        render: () => (
+          <Stack spacing={8} align="center" className="py-4">
+            <Stack align="center" spacing={2}>
+              <Caption>Spring (Default)</Caption>
+              <PillNav defaultValue="1" animationType="spring">
+                <PillNav.Item value="1">Option 1</PillNav.Item>
+                <PillNav.Item value="2">Option 2</PillNav.Item>
+                <PillNav.Item value="3">Option 3</PillNav.Item>
+              </PillNav>
+            </Stack>
+            <Stack align="center" spacing={2}>
+              <Caption>Smooth (Tween)</Caption>
+              <PillNav defaultValue="1" animationType="smooth">
+                <PillNav.Item value="1">Option 1</PillNav.Item>
+                <PillNav.Item value="2">Option 2</PillNav.Item>
+                <PillNav.Item value="3">Option 3</PillNav.Item>
+              </PillNav>
+            </Stack>
+            <Stack align="center" spacing={2}>
+              <Caption>Elastic (Bouncy)</Caption>
+              <PillNav defaultValue="1" animationType="elastic">
+                <PillNav.Item value="1">Option 1</PillNav.Item>
+                <PillNav.Item value="2">Option 2</PillNav.Item>
+                <PillNav.Item value="3">Option 3</PillNav.Item>
+              </PillNav>
+            </Stack>
+          </Stack>
+        ),
+        usageCode: `<PillNav animationType="elastic">...</PillNav>`
+      },
+      {
+        title: 'Vertical Orientation',
+        render: () => (
+          <div className="py-4">
+            <PillNav defaultValue="overview" orientation="vertical" className="w-48">
+              <PillNav.Item value="overview">Overview</PillNav.Item>
+              <PillNav.Item value="analytics">Analytics</PillNav.Item>
+              <PillNav.Item value="reports">Reports</PillNav.Item>
+              <PillNav.Item value="settings">Settings</PillNav.Item>
+            </PillNav>
+          </div>
+        ),
+        usageCode: `<PillNav orientation="vertical">...</PillNav>`
+      }
+    ],
+    props: [
+      { name: 'value', type: 'string', default: '-', desc: 'The controlled value of the active item.' },
+      { name: 'defaultValue', type: 'string', default: '-', desc: 'The initial value for uncontrolled mode.' },
+      { name: 'onValueChange', type: '(value: string) => void', default: '-', desc: 'Callback triggered when the active item changes.' },
+      { name: 'orientation', type: '"horizontal" | "vertical"', default: '"horizontal"', desc: 'The layout orientation of the navigation.' },
+      { name: 'animationType', type: '"spring" | "smooth" | "elastic"', default: '"spring"', desc: 'The motion physics to use for the indicator.' },
+      { name: 'fullWidth', type: 'boolean', default: 'false', desc: 'Whether the container should take up the full width.' },
+      { name: 'disabled', type: 'boolean', default: 'false', desc: 'Whether the entire navigation is disabled.' }
+    ]
+  },
 
   // --- 3D Components ---
   navbar: {
@@ -1443,6 +1532,75 @@ const docs: Record<string, ComponentDoc> = {
     props: [
       { name: 'initialRole', type: 'Admin | Editor | Viewer', default: 'Admin', desc: 'Starting role for permission simulation.' }
     ]
+  },
+  'scroll-stack': {
+    id: 'scroll-stack',
+    name: 'Scroll Stack',
+    category: 'Composite',
+    subCategory: 'Organisms / Patterns',
+    description: 'A premium scrolling presentation where cards stack and scale with a depth effect. Ideal for feature showcases or portfolios.',
+    implementationSource: SOURCES.scrollStack,
+    examples: [
+      {
+        title: 'Nexus Stack',
+        description: 'A professional stacking card interface for dashboards or feature lists.',
+        render: () => (
+             <div className="h-[600px] w-full overflow-y-auto border border-neutral-200 dark:border-neutral-800 rounded-xl relative bg-neutral-50 dark:bg-neutral-950/50">
+                <ScrollStack orientation="horizontal" offset={-20} scaleStrength={0.05} blurStrength={2}>
+                    <div className="w-full h-full flex items-center justify-center p-4">
+                        <div className="w-[400px] h-[500px] rounded-2xl bg-white dark:bg-neutral-900 flex flex-col p-8 shadow-xl border border-neutral-200 dark:border-neutral-800">
+                             <div className="w-14 h-14 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 mb-6">
+                                <Icon size="lg"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></Icon>
+                             </div>
+                             <Heading level={2} className="mb-3">Fast Performance</Heading>
+                             <Text color="muted" size="lg">Optimized for speed with zero runtime overhead. Experience silky smooth interactions.</Text>
+                        </div>
+                    </div>
+                    <div className="w-full h-full flex items-center justify-center p-4">
+                        <div className="w-[400px] h-[500px] rounded-2xl bg-white dark:bg-neutral-900 flex flex-col p-8 shadow-xl border border-neutral-200 dark:border-neutral-800">
+                             <div className="w-14 h-14 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 mb-6">
+                                <Icon size="lg"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></Icon>
+                             </div>
+                             <Heading level={2} className="mb-3">Secure by Design</Heading>
+                             <Text color="muted" size="lg">Enterprise-grade security features built-in directly. specific compliance ready.</Text>
+                        </div>
+                    </div>
+                    <div className="w-full h-full flex items-center justify-center p-4">
+                        <div className="w-[400px] h-[500px] rounded-2xl bg-white dark:bg-neutral-900 flex flex-col p-8 shadow-xl border border-neutral-200 dark:border-neutral-800">
+                             <div className="w-14 h-14 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 mb-6">
+                                <Icon size="lg"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></Icon>
+                             </div>
+                             <Heading level={2} className="mb-3">Real-time Analytics</Heading>
+                             <Text color="muted" size="lg">Track every metric with precision and ease. Visualize data in real-time.</Text>
+                        </div>
+                    </div>
+                    <div className="w-full h-full flex items-center justify-center p-4">
+                        <div className="w-[400px] h-[500px] rounded-2xl bg-white dark:bg-neutral-900 flex flex-col p-8 shadow-xl border border-neutral-200 dark:border-neutral-800">
+                             <div className="w-14 h-14 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center text-rose-600 mb-6">
+                                <Icon size="lg"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></Icon>
+                             </div>
+                             <Heading level={2} className="mb-3">User Loved</Heading>
+                             <Text color="muted" size="lg">Designed with empathy for the best user experience. Award winning interface.</Text>
+                        </div>
+                    </div>
+                </ScrollStack>
+                <div className="absolute top-4 right-4 bg-white/80 dark:bg-black/50 backdrop-blur-md text-neutral-500 dark:text-neutral-400 px-3 py-1.5 rounded-full text-xs pointer-events-none border border-neutral-200 dark:border-neutral-800 shadow-sm">Scroll to Stack</div>
+             </div>
+        ),
+        usageCode: `<ScrollStack orientation="horizontal" offset={-20} scaleStrength={0.05} blurStrength={2}>
+  <FeatureCard icon={<BoltIcon />} title="Fast" />
+  <FeatureCard icon={<LockIcon />} title="Secure" />
+  <FeatureCard icon={<ChartIcon />} title="Analytics" />
+  <FeatureCard icon={<HeartIcon />} title="Loved" />
+</ScrollStack>`
+      }
+    ],
+    props: [
+      { name: 'orientation', type: '"vertical" | "horizontal"', default: '"vertical"', desc: 'Scroll direction.' },
+      { name: 'snap', type: 'boolean', default: 'false', desc: 'Enable scroll snapping.' },
+      { name: 'scaleStrength', type: 'number', default: '0.05', desc: 'How much items scale down as they stack.' },
+      { name: 'blurStrength', type: 'number', default: '10', desc: 'Blur amount for stacked items.' },
+    ]
   }
 };
 
@@ -1572,6 +1730,12 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
       { name: 'variant', type: 'select', default: 'default', options: ['default', 'minimal', 'filled', 'outline', 'glass', 'gradient'] },
       { name: 'color', type: 'select', default: 'primary', options: ['primary', 'secondary', 'success', 'warning', 'danger', 'neutral'] },
       { name: 'currentStep', type: 'number', default: '1' },
+    ],
+    'scroll-stack': [
+      { name: 'orientation', type: 'select', default: 'vertical', options: ['vertical', 'horizontal'] },
+      { name: 'snap', type: 'boolean', default: 'false' },
+      { name: 'scaleStrength', type: 'number', default: '0.05' },
+      { name: 'blurStrength', type: 'number', default: '10' },
     ]
   };
 
@@ -1669,6 +1833,16 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
                                               >
                                                 <Icon size="md" className="text-white"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></Icon>
                                               </div>
+                                            </div>
+                                          );
+                                          if (componentId === 'scroll-stack') return (
+                                            <div className="h-[400px] w-full overflow-y-auto border border-neutral-200 dark:border-neutral-800 rounded-lg relative">
+                                                <ScrollStack {...activeProps}>
+                                                    <div className="w-full h-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-3xl font-bold text-slate-400">1</div>
+                                                    <div className="w-full h-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-3xl font-bold text-blue-500">2</div>
+                                                    <div className="w-full h-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-3xl font-bold text-indigo-500">3</div>
+                                                    <div className="w-full h-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-3xl font-bold text-purple-500">4</div>
+                                                </ScrollStack>
                                             </div>
                                           );
                                           return doc.examples[0].render();

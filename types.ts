@@ -449,3 +449,12 @@ export interface Example {
   code: string;
   render: () => ReactNode;
 }
+
+export interface ScrollStackProps extends BaseProps {
+  orientation?: "vertical" | "horizontal";
+  snap?: boolean;
+  scaleStrength?: number;
+  offset?: number;
+  blurStrength?: number;
+}
+

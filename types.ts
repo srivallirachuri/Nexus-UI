@@ -499,4 +499,44 @@ export interface SourceData {
   authFlow?: string;
   adminDashboard?: string;
   crudManagement?: string;
+  ecommerceTemplate?: string;
+}
+
+// E-commerce Types
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  category: string;
+  rating: number;
+  reviews: number;
+  stock: number;
+  variants?: {
+    type: "color" | "size";
+    options: { label: string; value: string; color?: string }[];
+  }[];
+  isNew?: boolean;
+  isSale?: boolean;
+  salePrice?: number;
+}
+
+export interface CartItem extends Product {
+  quantity: number;
+  selectedVariants?: Record<string, string>;
+}
+
+export interface Order {
+  id: string;
+  items: CartItem[];
+  total: number;
+  status: "pending" | "processing" | "shipped" | "delivered";
+  date: string;
+  shippingAddress: {
+    name: string;
+    street: string;
+    city: string;
+    zip: string;
+  };
 }

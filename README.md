@@ -67,15 +67,26 @@ nexus-ui-system/
 
 4. Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## 📖 Component Library Status
+## 📖 Using Snippets in Your Own Project
 
-| Category | Status | Components |
-| :--- | :--- | :--- |
-| **Foundations** | ✅ Stable | Colors, Typography, Spacing |
-| **Primitives** | ✅ Stable | Button, Text, Heading, Badge |
-| **Forms** | 🛠 Beta | Input, Checkbox, Switch |
-| **Layout** | 🛠 Beta | Card, Stack, Container |
-| **Patterns** | 🚀 Active | Dashboard, Login |
+Nexus UI components are designed to be copy-pasted. To ensure they run correctly in your local environment, please note the following requirements:
+
+### 1. TypeScript Requirement
+All code snippets use **TypeScript (.tsx)**. If you are using plain JavaScript, you must remove the type annotations (e.g., `: React.FC`, `<CartItem[]>`) to avoid syntax errors.
+
+### 2. Peer Dependencies
+Ensure your project has the following dependencies installed:
+```bash
+npm install framer-motion lucide-react tailwind-merge clsx
+```
+
+### 3. Tailwind CSS
+Components rely on Tailwind CSS for styling. Make sure you have Tailwind configured in your project.
+
+### 4. Components Primitives
+Complex components (like Templates) often import internal primitives from `./ui`. When copying a complex component, you may also need to copy its dependent primitives like `Button`, `Card`, or `Heading`.
+
+---
 
 ## 🎨 Design System
 

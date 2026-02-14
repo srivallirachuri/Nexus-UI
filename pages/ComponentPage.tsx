@@ -19,6 +19,7 @@ import { Orbit } from '../components/ui/Orbit';
 import { TargetCursor } from '../components/ui/TargetCursor';
 import { ScrollStack } from '../components/ui/ScrollStack';
 import { PillNav } from '../components/ui/PillNav';
+import { EcommerceTemplate } from '../components/ui/Ecommerce';
 
 
 // Import full source codes
@@ -1712,6 +1713,27 @@ const docs: Record<string, ComponentDoc> = {
       { name: 'backLabel', type: 'string', default: '"Back"', desc: 'Custom label for Back button.' },
       { name: 'animated', type: 'boolean', default: 'true', desc: 'Enable animations.' }
     ]
+  },
+  'ecommerce-marketplace': {
+    id: 'ecommerce-marketplace',
+    name: 'E-commerce Marketplace',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    description: 'A robust product-based marketplace template featuring filtering, advanced product details, cart with motion-driven interactions, and multi-step checkout.',
+    implementationSource: SOURCES.ecommerceTemplate,
+    examples: [
+      {
+        title: 'Complete Marketplace View',
+        description: 'The full interactive e-commerce experience including grid, detail, and checkout views.',
+        render: () => (
+          <div className="w-full border border-neutral-200 dark:border-neutral-800 rounded-3xl overflow-hidden bg-white dark:bg-neutral-950 shadow-2xl relative h-[800px]">
+             <EcommerceTemplate />
+          </div>
+        ),
+        usageCode: `<EcommerceTemplate />`
+      }
+    ],
+    props: []
   }
 };
 
@@ -1952,6 +1974,37 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
         </div>
         <Heading level={1} className="text-4xl lg:text-5xl font-bold tracking-tight">{doc.name}</Heading>
       </header>
+
+      {/* Technical Requirements Notice */}
+      <div className="px-4">
+        <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 flex flex-col md:flex-row md:items-center gap-4">
+          <div className="flex items-center gap-2 text-blue-500 shrink-0">
+            <Icon size="sm"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></Icon>
+            <Text weight="bold" size="sm" className="text-blue-600 dark:text-blue-400">Technical Requirements</Text>
+          </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+              <Text size="xs" tone="muted">React 19+</Text>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+              <Text size="xs" tone="muted">TypeScript (.tsx)</Text>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+              <Text size="xs" tone="muted">Tailwind CSS</Text>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+              <Text size="xs" tone="muted">Framer Motion</Text>
+            </div>
+          </div>
+          <Text size="xs" className="md:ml-auto text-blue-600/70 dark:text-blue-400/70 italic">
+            JavaScript users must remove type annotations.
+          </Text>
+        </div>
+      </div>
 
       <Card padding="none" className="overflow-hidden border border-neutral-200 dark:border-neutral-800 shadow-xl bg-white dark:bg-neutral-950 rounded-2xl">
         <Tabs 

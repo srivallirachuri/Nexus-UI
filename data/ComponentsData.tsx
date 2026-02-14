@@ -25,6 +25,7 @@ import { AuthFlow } from '../components/ui/AuthFlow';
 import { UserManager } from '../components/ui/CRUDManager';
 import { Orbit } from '../components/ui/Orbit';
 import { PillNav } from '../components/ui/PillNav';
+import { EcommerceTemplate } from '../components/ui/Ecommerce';
 
 
 export type Category = 'Atomic' | 'Reusable' | 'Composite' | 'App-level';
@@ -699,5 +700,23 @@ export const components: ComponentItem[] = [
 // Full CRUD with Permission Simulation
 <UserManager initialRole="Admin" />`,
     info: 'Comprehensive CRUD lifecycle: Real-time search/sort, field validation, unsaved change detection, bulk actions (delete/status), and permission-based UI states (Admin/Editor/Viewer).'
+  },
+  {
+    id: 'ecommerce-marketplace',
+    name: 'E-commerce Marketplace',
+    category: 'App-level',
+    subCategory: 'Templates / Pages',
+    variants: 1,
+    description: 'A robust product-based marketplace template featuring filtering, advanced product details, cart with motion-driven interactions, and multi-step checkout.',
+    preview: (
+      <div className="w-full h-full bg-white dark:bg-neutral-950 rounded-xl overflow-hidden shadow-2xl border border-neutral-200 dark:border-neutral-800 scale-[0.3] origin-top transform-gpu">
+        <EcommerceTemplate />
+      </div>
+    ),
+    code: `import { EcommerceTemplate } from "./components/ui/Ecommerce";
+
+// Complete Marketplace Experience
+<EcommerceTemplate />`,
+    info: 'A high-complexity template for product-based startups. Includes a responsive product grid with dynamic filtering, a slide-out cart drawer with spring physics, and a full checkout lifecycle.'
   }
 ];

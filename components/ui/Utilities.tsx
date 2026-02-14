@@ -89,12 +89,27 @@ export const CopyToClipboard: React.FC<{ text: string, children?: ReactNode }> =
 export const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'tsx', showLineNumbers = true, className = '' }) => {
   return (
     <div className={`relative bg-neutral-900 dark:bg-black text-neutral-100 rounded-lg overflow-hidden border border-neutral-800 ${className}`}>
-      <div className="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-black/40 backdrop-blur-md">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-black/40 backdrop-blur-md relative group/header">
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
           <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
           <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
-          <span className="ml-2 text-[10px] font-bold font-mono text-white/30 uppercase tracking-widest">{language}</span>
+          <div className="flex items-center gap-2 ml-2">
+            <span className="text-[10px] font-bold font-mono text-white/30 uppercase tracking-widest">{language}</span>
+            {language === 'tsx' && (
+              <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20">
+                <span className="text-[9px] font-bold text-blue-400 uppercase tracking-tighter">TSX</span>
+                <div className="group/info relative cursor-help">
+                  <Icon size="xs" className="text-blue-400/50 hover:text-blue-400 transition-colors">
+                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </Icon>
+                  <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 p-2 bg-neutral-800 text-[10px] text-neutral-200 rounded shadow-xl opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all duration-200 z-50 pointer-events-none border border-neutral-700">
+                    This code requires a TypeScript (.tsx) environment. Remove type annotations to use in plain JavaScript.
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         <CopyToClipboard text={code} />
       </div>

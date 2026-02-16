@@ -508,6 +508,8 @@ export interface SourceData {
   adminDashboard?: string;
   crudManagement?: string;
   ecommerceTemplate?: string;
+  sidebarJSX?: string;
+  sidebarCSS?: string;
 }
 
 // E-commerce Types
@@ -6034,5 +6036,479 @@ export const EcommerceTemplate = () => {
     </div>
   );
 };
+`,
+  divider: `import React from 'react';
+import { DividerProps } from '../../../types';
+import styles from './Divider.module.css';
+
+export const Divider = React.forwardRef<HTMLDivElement, DividerProps>(({
+  className = '',
+  variant = 'solid',
+  orientation = 'horizontal',
+  thickness = '1px',
+  color,
+  label,
+  labelPosition = 'center',
+  labelBackground,
+  style,
+  ...props
+}, ref) => {
+  // Construct dynamic styles for container
+  const dynamicStyles: React.CSSProperties = {
+    ...style,
+    ['--divider-thickness' as any]: typeof thickness === 'number' ? \`\${thickness}px\` : thickness,
+    ['--divider-color' as any]: color,
+  };
+
+  if (color) {
+     dynamicStyles.color = color;
+  }
+
+  // Determine line style based on variant and orientation
+  const getLineStyle = () => {
+    // Zigzag needs more height to be visible, override default 1px if not explicitly changed
+    let appliedThickness = thickness;
+    if (variant === 'zigzag' && (thickness === '1px' || thickness === 1)) {
+        appliedThickness = '12px';
+    }
+
+    return {
+      '--divider-thickness': typeof appliedThickness === 'number' ? \`\${appliedThickness}px\` : appliedThickness
+    } as React.CSSProperties;
+  };
+
+  const lineStyle = getLineStyle();
+
+  // Helper to render content
+  const renderContent = () => {
+    // Local component for lines
+    const Line = () => (
+      <div 
+        className={styles.line} 
+        style={lineStyle} 
+      />
+    );
+
+    if (!label) {
+      return <Line />;
+    }
+
+    if (orientation === 'vertical') {
+       // Vertical with label
+       return (
+        <>
+          <Line />
+          <span className={styles.label} style={{ background: labelBackground }}>{label}</span>
+          <Line />
+        </>
+      );
+    }
+
+    // Horizontal with label
+    if (labelPosition === 'left') {
+      return (
+        <>
+          <span className={\`\${styles.label} \${styles.labelLeft}\`} style={{ background: labelBackground }}>{label}</span>
+          <Line />
+        </>
+      );
+    }
+
+    if (labelPosition === 'right') {
+      return (
+        <>
+          <Line />
+          <span className={\`\${styles.label} \${styles.labelRight}\`} style={{ background: labelBackground }}>{label}</span>
+        </>
+      );
+    }
+
+    // Center
+    return (
+      <>
+        <Line />
+        <span className={styles.label} style={{ background: labelBackground }}>{label}</span>
+        <Line />
+      </>
+    );
+  };
+
+  return (
+    <div
+      ref={ref}
+      role="separator"
+      aria-orientation={orientation}
+      className={\`
+        \${styles.divider}
+        \${styles[orientation] || ''}
+        \${variant ? (styles[variant] || '') : styles.solid}
+        \${className}
+      \`}
+      style={dynamicStyles}
+      {...props}
+    >
+      {renderContent()}
+    </div>
+  );
+});
+
+Divider.displayName = 'Divider';`,
+  dividerCSS: `/* Divider.module.css */
+
+.divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: var(--neutral-300, #cbd5e1);
+  font-family: inherit;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+:global(.dark) .divider {
+  color: var(--neutral-700, #334155);
+}
+
+.horizontal {
+  flex-direction: row;
+  height: auto;
+  min-height: 1px;
+}
+
+.vertical {
+  flex-direction: column;
+  width: auto;
+  min-width: 1px;
+  height: 100%;
+  min-height: 1em;
+  padding: 0 1rem;
+}
+
+/* Line Styles */
+.line {
+  flex: 1;
+  background-color: currentColor;
+  transition: all 0.2s ease-in-out;
+}
+
+.horizontal .line {
+  height: var(--divider-thickness, 1px);
+  width: 100%;
+}
+
+.vertical .line {
+  width: var(--divider-thickness, 1px);
+  height: 100%;
+  flex-basis: 100%;
+}
+
+/* Variants */
+.solid .line {
+  opacity: 1;
+}
+
+.dashed .line {
+  background-image: linear-gradient(to right, currentColor 50%, transparent 50%);
+  background-size: 8px 100%;
+  background-color: transparent;
+}
+
+.vertical.dashed .line {
+  background-image: linear-gradient(to bottom, currentColor 50%, transparent 50%);
+  background-size: 100% 8px;
+}
+
+.dotted .line {
+  background-image: radial-gradient(circle, currentColor 25%, transparent 26%);
+  background-size: 4px 100%;
+  background-color: transparent;
+}
+
+.vertical.dotted .line {
+  background-image: radial-gradient(circle, currentColor 25%, transparent 26%);
+  background-size: 100% 4px;
+}
+
+/* Gradient Variant */
+.gradient .line {
+  border: none;
+  height: var(--divider-thickness, 1px);
+  background: linear-gradient(to right, transparent, var(--primary-500, #6366f1), transparent);
+  width: 100%;
+}
+
+.vertical.gradient .line {
+  width: var(--divider-thickness, 1px);
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--primary-500, #6366f1), transparent);
+}
+
+/* Animated Gradient */
+.gradient-animated .line {
+  border: none;
+  height: var(--divider-thickness, 2px);
+  background: linear-gradient(90deg, 
+    var(--primary-500, #6366f1), 
+    var(--secondary-500, #ec4899), 
+    var(--primary-500, #6366f1)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+  width: 100%;
+}
+
+.vertical.gradient-animated .line {
+  width: var(--divider-thickness, 2px);
+  height: 100%;
+  background: linear-gradient(180deg, 
+    var(--primary-500, #6366f1), 
+    var(--secondary-500, #ec4899), 
+    var(--primary-500, #6366f1)
+  );
+  background-size: 100% 200%;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* Label Styles */
+.label {
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+:global(.dark) .label { color: #94a3b8; }
+
+.vertical .label {
+  padding: 0.75rem 0;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+
+/* Fade Variant */
+.fade .line {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+  opacity: 0.5;
+}
+
+.vertical.fade .line {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, currentColor, transparent);
+}
+
+/* Glass Variant */
+.glass .line {
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.1),
+    0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+:global(.dark) .glass .line {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.05),
+    0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Glow Variant */
+.glow .line {
+  border-top-style: solid;
+  border-top-color: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* Zigzag Variant */
+.zigzag .line {
+  border: none;
+  height: 12px;
+  background: linear-gradient(135deg, currentColor 25%, transparent 25%) -6px 0,
+              linear-gradient(225deg, currentColor 25%, transparent 25%) -6px 0,
+              linear-gradient(315deg, currentColor 25%, transparent 25%),
+              linear-gradient(45deg, currentColor 25%, transparent 25%);
+  background-size: 12px 12px;
+  opacity: 0.3;
+}
+
+.labelLeft { padding-left: 0; }
+.labelRight { padding-right: 0; }
+`,
+  sidebarJSX: `import React, { useState, useEffect, useRef, createContext, useContext, ReactNode } from 'react';
+
+// --- Types ---
+export type SidebarVariant = 'default' | 'minimal' | 'floating' | 'glass';
+export type SidebarSize = 'sm' | 'md' | 'lg';
+export type SidebarTheme = 'light' | 'dark';
+
+export interface SidebarProps {
+  children?: ReactNode;
+  variant?: SidebarVariant;
+  size?: SidebarSize;
+  className?: string;
+  collapsible?: boolean;
+  defaultCollapsed?: boolean;
+  collapsed?: boolean;
+  onCollapseChange?: (collapsed: boolean) => void;
+  width?: string;
+  collapsedWidth?: string;
+  theme?: SidebarTheme;
+  showExpandOnHover?: boolean;
+}
+
+export interface SidebarItemProps {
+  icon?: ReactNode;
+  label: string;
+  active?: boolean;
+  disabled?: boolean;
+  onClick?: () => void;
+  badge?: ReactNode;
+  href?: string;
+  className?: string;
+}
+
+export interface SidebarSectionProps {
+  title?: string;
+  children: ReactNode;
+  collapsible?: boolean;
+  defaultExpanded?: boolean;
+}
+
+// --- Context ---
+const SidebarContext = createContext<any>(undefined);
+
+export const useSidebar = () => {
+  const context = useContext(SidebarContext);
+  if (!context) throw new Error('useSidebar must be used within Sidebar');
+  return context;
+};
+
+// --- Components ---
+export const SidebarItem: React.FC<SidebarItemProps> = ({ 
+  icon, label, active, disabled, onClick, badge, href, className = '' 
+}) => {
+  const { collapsed } = useSidebar();
+  
+  const content = (
+    <div 
+      className={['nexus-sidebar-item', active && 'nexus-sidebar-item-active', disabled && 'nexus-sidebar-item-disabled', className].filter(Boolean).join(' ')}
+      onClick={disabled ? undefined : onClick}
+    >
+      {icon && <span className="nexus-sidebar-item-icon">{icon}</span>}
+      {!collapsed && <span className="nexus-sidebar-item-label">{label}</span>}
+      {!collapsed && badge && <span className="nexus-sidebar-item-badge">{badge}</span>}
+      {collapsed && <div className="nexus-sidebar-tooltip">{label}</div>}
+    </div>
+  );
+
+  if (href) return <a href={href}>{content}</a>;
+  return content;
+};
+
+export const SidebarSection: React.FC<SidebarSectionProps> = ({ 
+  title, children, collapsible, defaultExpanded = true 
+}) => {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const { collapsed } = useSidebar();
+
+  return (
+    <div className="nexus-sidebar-section">
+      {title && !collapsed && (
+        <div 
+          className="nexus-sidebar-section-header" 
+          onClick={() => collapsible && setIsExpanded(!isExpanded)}
+        >
+          {title}
+          {collapsible && (
+            <span style={{ transform: isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.2s' }}>
+              ▼
+            </span>
+          )}
+        </div>
+      )}
+      {(isExpanded || collapsed) && <div className="nexus-sidebar-section-content">{children}</div>}
+    </div>
+  );
+};
+
+export const Sidebar: React.FC<SidebarProps> = ({
+  children, variant = 'default', theme = 'light', width = '260px', collapsedWidth = '80px', ...props
+}) => {
+  const [collapsed, setCollapsed] = useState(props.defaultCollapsed || false);
+  const actualWidth = collapsed ? collapsedWidth : width;
+
+  return (
+    <SidebarContext.Provider value={{ collapsed, variant, theme }}>
+      <aside 
+        className={['nexus-sidebar', \`nexus-sidebar-variant-\${variant}\`, theme === 'dark' && 'dark', collapsed && 'nexus-sidebar-collapsed'].filter(Boolean).join(' ')}
+        style={{ width: actualWidth }}
+      >
+        <div className="nexus-sidebar-content">{children}</div>
+      </aside>
+    </SidebarContext.Provider>
+  );
+};
+`,
+  sidebarCSS: `:root {
+  --sidebar-bg-light: #ffffff;
+  --sidebar-bg-dark: #0f172a;
+  --sidebar-border-light: #e2e8f0;
+  --sidebar-border-dark: #1e293b;
+  --sidebar-primary: #6366f1;
+}
+
+.nexus-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: all 0.3s ease;
+  border-right: 1px solid var(--sidebar-border-light);
+  background: var(--sidebar-bg-light);
+}
+
+.nexus-sidebar.dark {
+  background: var(--sidebar-bg-dark);
+  border-right-color: var(--sidebar-border-dark);
+}
+
+.nexus-sidebar-variant-floating {
+  margin: 1rem;
+  border-radius: 1rem;
+  height: calc(100% - 2rem);
+  border: 1px solid var(--sidebar-border-light);
+}
+
+.nexus-sidebar-variant-glass {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(12px);
+}
+
+.nexus-sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  gap: 0.75rem;
+}
+
+.nexus-sidebar-item:hover {
+  background: #f1f5f9;
+}
+
+.nexus-sidebar-item-active {
+  color: var(--sidebar-primary);
+  background: #f8fafc;
+}
 `,
 };

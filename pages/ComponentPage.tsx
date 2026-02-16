@@ -10,7 +10,7 @@ import { List, ListItem, ListItemIcon, ListItemText, ListDivider } from '../comp
 import { Breadcrumbs, Stepper, CommandPalette } from '../components/ui/Navigation';
 import { AuthLayout, DashboardLayout, HeroSection, FeatureGrid, PricingSection, Footer, Page404, ErrorPage } from '../components/ui/Patterns';
 import { ThemeToggle, CopyToClipboard, CodeBlock, Portal, ResponsiveVisibility, VisuallyHidden, FocusTrap } from '../components/ui/Utilities';
-import { Sidebar } from '../components/navigation/Sidebar';
+import { Sidebar } from '../components/patterns/sidebar';
 import { Navbar } from '../components/navigation/Navbar';
 import { AuthFlow } from '../components/ui/AuthFlow';
 import { UserManager } from '../components/ui/CRUDManager';
@@ -21,6 +21,7 @@ import { ScrollStack } from '../components/ui/ScrollStack';
 import { PillNav } from '../components/ui/PillNav';
 import { EcommerceTemplate } from '../components/ui/Ecommerce';
 import { ErrorBoundary } from '../components/ui/ErrorBoundary';
+import { Divider } from '../components/ui/divider';
 
 
 // Import full source codes
@@ -43,8 +44,7 @@ export interface ComponentDoc {
   props: { name: string; type: string; default: string; desc: string }[];
 }
 
-// Helper to simulate a Divider
-const Divider = () => <hr className="my-4 border-neutral-200 dark:border-neutral-800" />;
+
 
 const docs: Record<string, ComponentDoc> = {
   // --- 1D Components ---
@@ -676,15 +676,50 @@ const docs: Record<string, ComponentDoc> = {
     name: 'Divider',
     category: 'Atomic',
     subCategory: 'Foundation / Primitives',
-    description: 'Visually separates content.',
+    description: 'Visually separates content with support for various styles, text labels, and orientations.',
+    implementationSource: SOURCES.divider,
+    cssSource: SOURCES.dividerCSS,
     examples: [
       {
-        title: 'Usage',
-        render: () => <Box><Text>Above</Text><Divider /><Text>Below</Text></Box>,
-        usageCode: `<Text>Above</Text>\n<hr className="my-4 border-neutral-200" />\n<Text>Below</Text>`
+        title: 'With Text',
+        render: () => (
+          <Stack spacing={4}>
+            <Divider label="Center" />
+            <Divider label="Left" labelPosition="left" />
+            <Divider label="Right" labelPosition="right" />
+          </Stack>
+        ),
+        usageCode: `<Divider label="Center" />
+<Divider label="Left" labelPosition="left" />
+<Divider label="Right" labelPosition="right" />`
+      },
+      {
+         title: 'Vertical',
+         render: () => (
+            <Flex className="h-12 items-center border p-2 rounded">
+               <Text>Item 1</Text>
+               <Divider orientation="vertical" />
+               <Text>Item 2</Text>
+               <Divider orientation="vertical" variant="dashed" />
+               <Text>Item 3</Text>
+            </Flex>
+         ),
+         usageCode: `<Flex className="h-12 items-center">
+  <Text>Item 1</Text>
+  <Divider orientation="vertical" />
+  <Text>Item 2</Text>
+</Flex>`
       }
     ],
-    props: []
+    props: [
+      { name: 'variant', type: 'solid | dashed | dotted | gradient | gradient-animated', default: 'solid', desc: 'Visual style of the line.' },
+      { name: 'orientation', type: 'horizontal | vertical', default: 'horizontal', desc: 'Direction of the divider.' },
+      { name: 'thickness', type: 'number | string', default: '1px', desc: 'Thickness of the line.' },
+      { name: 'color', type: 'string', default: '-', desc: 'Custom color override.' },
+      { name: 'label', type: 'ReactNode', default: '-', desc: 'Content to display within the divider.' },
+      { name: 'labelPosition', type: 'left | center | right', default: 'center', desc: 'Position of the label (horizontal only).' },
+      { name: 'labelBackground', type: 'string', default: '-', desc: 'Background color for label text (useful for transparency).' }
+    ]
   },
   'progress-bar': {
     id: 'progress-bar',
@@ -1016,21 +1051,40 @@ const docs: Record<string, ComponentDoc> = {
     name: 'Sidebar',
     category: 'Composite',
     subCategory: 'Organisms / Patterns',
-    description: 'Side navigation menu.',
+    description: 'A professional, production-ready navigation sidebar with support for multiple variants, states, and responsive behavior. Built with a compound component pattern for maximum flexibility.',
+    implementationSource: SOURCES.sidebarJSX,
+    cssSource: SOURCES.sidebarCSS,
     examples: [
       {
-         title: 'Preview',
+         title: 'Default Sidebar',
          render: () => (
-           <div className="h-64 border border-neutral-200 dark:border-neutral-800 rounded-md overflow-hidden relative">
-              <div className="absolute inset-0 overflow-y-auto">
-                 <Sidebar />
+           <div className="h-[500px] border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden relative flex bg-neutral-50 dark:bg-neutral-900/50">
+              <Sidebar>
+                <Sidebar.Section title="Overview">
+                  <Sidebar.Item icon={<Icon size="xs"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></Icon>} label="Dashboard" active />
+                  <Sidebar.Item icon={<Icon size="xs"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></Icon>} label="Analytics" />
+                </Sidebar.Section>
+                <Sidebar.Section title="System" collapsible>
+                  <Sidebar.Item icon={<Icon size="xs"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></Icon>} label="Settings" />
+                </Sidebar.Section>
+              </Sidebar>
+              <div className="flex-1 p-8">
+                 <Heading level={3}>Main Content</Heading>
+                 <Text tone="muted" className="mt-2">The sidebar is fully responsive and supports multiple variants.</Text>
               </div>
            </div>
          ),
-         usageCode: `<Sidebar />`
+         usageCode: `<Sidebar>\n  <Sidebar.Section title="Main">\n    <Sidebar.Item icon={<HomeIcon />} label="Home" active />\n  </Sidebar.Section>\n</Sidebar>`
       }
     ],
-    props: []
+    props: [
+      { name: 'variant', type: 'default | minimal | floating | glass', default: 'default', desc: 'Visual variant of the sidebar.' },
+      { name: 'theme', type: 'light | dark', default: 'light', desc: 'Color theme.' },
+      { name: 'collapsible', type: 'boolean', default: 'true', desc: 'Whether the sidebar can be collapsed.' },
+      { name: 'width', type: 'string', default: '260px', desc: 'Width when expanded.' },
+      { name: 'collapsedWidth', type: 'string', default: '80px', desc: 'Width when collapsed.' },
+      { name: 'showExpandOnHover', type: 'boolean', default: 'false', desc: 'Expand automatically on hover.' }
+    ]
   },
   alert: {
     id: 'alert',
@@ -2036,12 +2090,57 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
       { name: 'clickEffect', type: 'boolean', default: 'false' },
       { name: 'spotlightSize', type: 'number', default: '400' },
       { name: 'gap', type: 'string', default: '1.5rem' },
+    ],
+    divider: [
+      { name: 'variant', type: 'select', default: 'solid', options: ['solid', 'dashed', 'dotted', 'gradient', 'gradient-animated', 'fade', 'glass', 'glow', 'zigzag'] },
+      { name: 'orientation', type: 'select', default: 'horizontal', options: ['horizontal', 'vertical'] },
+      { name: 'thickness', type: 'string', default: '1px' },
+      { name: 'color', type: 'string', default: '' },
+      { name: 'label', type: 'string', default: 'Label' },
+      { name: 'labelPosition', type: 'select', default: 'center', options: ['left', 'center', 'right'] },
+    ],
+    sidebar: [
+      { name: 'variant', type: 'select', default: 'default', options: ['default', 'minimal', 'floating', 'glass'] },
+      { name: 'theme', type: 'select', default: 'light', options: ['light', 'dark'] },
+      { name: 'collapsible', type: 'boolean', default: 'true' },
+      { name: 'showExpandOnHover', type: 'boolean', default: 'false' },
+      { name: 'width', type: 'string', default: '260px' },
+    ],
+    checkbox: [
+      { name: 'label', type: 'string', default: 'Accept Terms' },
+      { name: 'variant', type: 'select', default: 'square', options: ['square', 'squircle', 'circle'] },
+      { name: 'disabled', type: 'boolean', default: 'false' },
+      { name: 'interactive', type: 'boolean', default: 'false' },
+      { name: 'hoverScale', type: 'number', default: '1.05' },
+      { name: 'tapScale', type: 'number', default: '0.95' },
+    ],
+    radio: [
+      { name: 'label', type: 'string', default: 'Radio Option' },
+      { name: 'disabled', type: 'boolean', default: 'false' },
+      { name: 'interactive', type: 'boolean', default: 'false' },
+      { name: 'hoverScale', type: 'number', default: '1.05' },
+      { name: 'tapScale', type: 'number', default: '0.95' },
     ]
   };
 
   const interactiveProps = interactivePropsMetadata[componentId];
 
   const generateCode = (componentId: string, activeProps: any) => {
+    if (componentId === 'sidebar') {
+      const activeEntries = Object.entries(activeProps).filter(([key, value]) => {
+        const metadata = (interactivePropsMetadata as any)[componentId]?.find((p: any) => p.name === key);
+        return value !== metadata?.default && key !== 'children';
+      });
+
+      const propsStr = activeEntries.map(([key, value]) => {
+        if (typeof value === 'boolean') return value ? key : '';
+        if (typeof value === 'string') return `${key}="${value}"`;
+        return `${key}={${JSON.stringify(value)}}`;
+      }).filter(Boolean).join(' ');
+
+      return `import { Sidebar } from "nexus-ui";\n\nreturn (\n  <Sidebar ${propsStr}>\n    <Sidebar.Section title="Main">\n      <Sidebar.Item icon={<HomeIcon />} label="Home" active />\n      <Sidebar.Item icon={<ChartIcon />} label="Analytics" />\n    </Sidebar.Section>\n    <Sidebar.Section title="System" collapsible>\n      <Sidebar.Item icon={<SettingsIcon />} label="Settings" />\n    </Sidebar.Section>\n  </Sidebar>\n);`;
+    }
+
     if (componentId === 'wizard') {
       const activeEntries = Object.entries(activeProps).filter(([key, value]) => {
         const metadata = interactiveProps.find(p => p.name === key);
@@ -2163,6 +2262,8 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
                                           if (componentId === 'badge') return <Badge {...activeProps}>{activeProps.children}</Badge>;
                                           if (componentId === 'spinner') return <Spinner {...activeProps} />;
                                           if (componentId === 'input') return <div className="w-full max-w-sm"><Input {...activeProps} /></div>;
+                                          if (componentId === 'checkbox') return <Checkbox {...activeProps} />;
+                                          if (componentId === 'radio') return <Radio {...activeProps} />;
                                           if (componentId === 'modal') return (
                                             <div className="relative h-64 w-full border border-dashed rounded flex items-center justify-center bg-neutral-50 dark:bg-neutral-900/50">
                                               <Button onClick={() => alert('In doc preview, modal would open here.')}>Open Modal Overlay</Button>
@@ -2227,6 +2328,35 @@ export const ComponentPage: React.FC<{ componentId: string }> = ({ componentId }
                                               ]} 
                                               {...activeProps} 
                                             />
+                                          );
+                                          if (componentId === 'divider') {
+                                            if (activeProps.orientation === 'vertical') {
+                                               return <div className="h-64 flex items-center justify-center p-4 bg-dots"><Divider {...activeProps} /></div>;
+                                            }
+                                            return <div className="w-full p-8"><Divider {...activeProps} /></div>;
+                                          }
+                                          if (componentId === 'sidebar') return (
+                                            <div className="h-[500px] w-full flex border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden bg-neutral-50 dark:bg-neutral-900/50">
+                                              <Sidebar {...activeProps}>
+                                                <Sidebar.Section title="Main">
+                                                  <Sidebar.Item icon={<Icon size="xs"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></Icon>} label="Dashboard" active />
+                                                  <Sidebar.Item icon={<Icon size="xs"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></Icon>} label="Profile" />
+                                                </Sidebar.Section>
+                                                <Sidebar.Section title="System" collapsible>
+                                                  <Sidebar.Item icon={<Icon size="xs"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></Icon>} label="Settings" />
+                                                </Sidebar.Section>
+                                              </Sidebar>
+                                              <div className="flex-1 p-8 overflow-auto">
+                                                <Stack spacing={6}>
+                                                  <Heading level={2}>Dashboard Analytics</Heading>
+                                                  <div className="grid grid-cols-2 gap-4">
+                                                    <Card className="p-4"><Text tone="muted">Views</Text><Heading level={4}>12,402</Heading></Card>
+                                                    <Card className="p-4"><Text tone="muted">Revenue</Text><Heading level={4}>$8,230</Heading></Card>
+                                                  </div>
+                                                  <Box className="h-64 bg-white dark:bg-neutral-800 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 flex items-center justify-center">Main Content Area</Box>
+                                                </Stack>
+                                              </div>
+                                            </div>
                                           );
                                           return (
                                             <ErrorBoundary>

@@ -490,3 +490,4 @@ import { WizardProps, WizardStep, WizardStepStatus } from '../../types';
 export * from './magic-bento';
 export * from './wizard';
 export * from './TargetCursor';
+export * from '../patterns/sidebar';

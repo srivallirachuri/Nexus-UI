@@ -521,6 +521,8 @@ export interface SourceData {
   adminDashboard?: string;
   crudManagement?: string;
   ecommerceTemplate?: string;
+  divider?: string;
+  dividerCSS?: string;
 }
 
 // E-commerce Types
@@ -560,4 +562,19 @@ export interface Order {
     city: string;
     zip: string;
   };
+}
+
+// Divider
+export type DividerVariant = "solid" | "dashed" | "dotted" | "gradient" | "gradient-animated" | "fade" | "glass" | "glow" | "zigzag";
+export type DividerOrientation = "horizontal" | "vertical";
+export type DividerLabelPosition = "left" | "center" | "right";
+
+export interface DividerProps extends BaseProps {
+  variant?: DividerVariant;
+  orientation?: DividerOrientation;
+  thickness?: number | string;
+  color?: string;
+  label?: ReactNode;
+  labelPosition?: DividerLabelPosition;
+  labelBackground?: string;
 }

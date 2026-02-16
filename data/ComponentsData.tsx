@@ -4,6 +4,7 @@ import {
   Button, Badge, Text, Heading, Icon, Avatar, AvatarGroup, Spinner, IconButton, SplitButton, HamburgerButton, Box, Flex,
   Label, Caption, Code, Blockquote
 } from '../components/ui/Primitives';
+import { Divider } from '../components/ui/divider';
 import { Card, Stack, Container } from '../components/ui/Layout';
 import { 
   Input, Checkbox, Radio, Switch, Textarea, Select, Slider, 
@@ -17,6 +18,7 @@ import {
 } from '../components/ui/Navigation';
 import { Navbar } from '../components/navigation/Navbar';
 import { Sidebar } from '../components/navigation/Sidebar';
+import { SidebarPreview } from '../components/ui/SidebarPreview';
 
 import { 
   HeroSection, FeatureGrid, PricingSection, AuthLayout, DashboardLayout, Footer, Page404, ErrorPage 
@@ -247,11 +249,20 @@ export const components: ComponentItem[] = [
     name: 'Divider',
     category: 'Atomic',
     subCategory: 'Foundation / Primitives',
-    variants: 2,
-    description: 'Visual separator between sections.',
-    preview: <div className="w-full h-px bg-neutral-200 dark:bg-neutral-800" />,
-    code: '<Divider />',
-    info: 'Separates content blocks visually.'
+    variants: 9,
+    description: 'A professional divider with support for text, gradients, and multiple styles including glass and glow.',
+    preview: (
+      <Stack spacing={6} className="w-full px-6 py-4">
+          <Divider />
+          <Divider label="Section Break" />
+          <Divider variant="dashed" />
+          <Divider thickness={2} />
+          <Divider thickness={2} color="var(--primary-500)" />
+          <Divider variant="zigzag" thickness={2} />
+      </Stack>
+    ),
+    code: '<Divider variant="glass" label="Section" />',
+    info: 'Supports horizontal/vertical orientation, text labels, and premium styles like Glass and Glow.'
   },
   {
     id: 'checkbox',
@@ -496,11 +507,23 @@ export const components: ComponentItem[] = [
     name: 'Sidebar',
     category: 'Composite',
     subCategory: 'Organisms / Patterns',
-    variants: 2,
-    description: 'Vertical application menu.',
-    preview: <div className="w-20 h-32 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded p-2 flex flex-col gap-2 scale-90"><div className="h-2 w-full bg-neutral-200 dark:bg-neutral-700 rounded" /><div className="h-2 w-full bg-neutral-200 dark:bg-neutral-700 rounded" /><div className="h-2 w-full bg-neutral-200 dark:bg-neutral-700 rounded" /></div>,
-    code: '<Sidebar />',
-    info: 'Side navigation system with categories.'
+    variants: 4,
+    description: 'A professional, production-ready navigation sidebar with support for multiple variants, states, and responsive behavior.',
+    preview: <SidebarPreview />,
+    code: `import { Sidebar } from "nexus-ui";
+
+// Basic Usage
+<Sidebar>
+  <Sidebar.Section title="Main">
+    <Sidebar.Item icon={<HomeIcon />} label="Home" active />
+    <Sidebar.Item icon={<ChartIcon />} label="Analytics" badge={<Badge>New</Badge>} />
+  </Sidebar.Section>
+  
+  <Sidebar.Section title="System" collapsible>
+    <Sidebar.Item icon={<SettingsIcon />} label="Settings" />
+  </Sidebar.Section>
+</Sidebar>`,
+    info: 'A robust composite component built with the compound component pattern. Supports Default, Minimal, Floating, and Glass variants. Features include controlled/uncontrolled collapse, expand-on-hover, nested sections, badges, and full keyboard accessibility.'
   },
   {
     id: 'hero-section',

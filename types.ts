@@ -525,6 +525,8 @@ export interface SourceData {
   dividerCSS?: string;
   sidebarJSX?: string;
   sidebarCSS?: string;
+  landingPageJSX?: string;
+  landingPageCSS?: string;
 }
 
 // E-commerce Types

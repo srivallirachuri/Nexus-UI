@@ -612,15 +612,15 @@ export const components: ComponentItem[] = [
 
   // --- APP-LEVEL (Templates / Pages) ---
   {
-    id: 'login-page',
-    name: 'Login Page',
+    id: 'landing-page',
+    name: 'Landing Page (Modular)',
     category: 'App-level',
     subCategory: 'Templates / Pages',
-    variants: 2,
-    description: 'Full authentication screen.',
-    preview: <div className="scale-[0.6] origin-top border rounded-xl bg-white dark:bg-neutral-900 shadow-xl overflow-hidden h-[300px] w-full"><LoginForm onSubmit={() => {}} /></div>,
-    code: '<AuthLayout><LoginForm /></AuthLayout>',
-    info: 'A complete login flow template.'
+    variants: 6,
+    description: 'Modern, fully modular landing page template with multiple sections and layouts.',
+    preview: <div className="scale-[0.5] origin-top border rounded-xl bg-white dark:bg-neutral-900 shadow-xl overflow-hidden h-[300px] w-full"><div className="p-8 text-center bg-indigo-600 text-white font-bold h-full flex flex-col items-center justify-center">Landing Page Template<div className="text-xs font-normal opacity-80 mt-2">Modular & Responsive</div></div></div>,
+    code: '<LandingPage variant="saas" theme="light" />',
+    info: 'A collection of production-ready sections for building high-conversion pages.'
   },
   {
     id: 'admin-dashboard',

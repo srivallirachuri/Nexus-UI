@@ -508,6 +508,8 @@ export interface SourceData {
   adminDashboard?: string;
   crudManagement?: string;
   ecommerceTemplate?: string;
+  divider?: string;
+  dividerCSS?: string;
   sidebarJSX?: string;
   sidebarCSS?: string;
 }

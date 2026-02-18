@@ -523,6 +523,8 @@ export interface SourceData {
   ecommerceTemplate?: string;
   divider?: string;
   dividerCSS?: string;
+  sidebarJSX?: string;
+  sidebarCSS?: string;
 }
 
 // E-commerce Types

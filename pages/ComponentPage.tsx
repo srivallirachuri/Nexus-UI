@@ -12,6 +12,7 @@ import { AuthLayout, DashboardLayout, HeroSection, FeatureGrid, PricingSection, 
 import { ThemeToggle, CopyToClipboard, CodeBlock, Portal, ResponsiveVisibility, VisuallyHidden, FocusTrap } from '../components/ui/Utilities';
 import { Sidebar } from '../components/patterns/sidebar';
 import { Navbar } from '../components/navigation/Navbar';
+import { LandingPage } from '../components/templates/landing-page';
 import { AuthFlow } from '../components/ui/AuthFlow';
 import { UserManager } from '../components/ui/CRUDManager';
 import { AdminDashboard, StatCard, MiniChart, AdvancedTable } from '../components/ui/Dashboard';
@@ -1451,14 +1452,78 @@ const docs: Record<string, ComponentDoc> = {
   },
 
   // --- New App-Level Components ---
-  'login-page': {
-    id: 'login-page',
-    name: 'Login Page',
+  'landing-page': {
+    id: 'landing-page',
+    name: 'Landing Page (Modular)',
     category: 'App-level',
     subCategory: 'Templates / Pages',
-    description: 'Complete user login screen layout.',
-    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border overflow-auto"><AuthLayout title="Login"><LoginForm onSubmit={() => {}} /></AuthLayout></div>, usageCode: `<LoginPage />` }],
-    props: []
+    description: 'A professional, production-ready navigation sidebar with support for multiple variants, states, and responsive behavior. Built with a compound component pattern for maximum flexibility.',
+    implementationSource: SOURCES.landingPageJSX,
+    cssSource: SOURCES.landingPageCSS,
+    examples: [
+      {
+        title: 'Default Landing Page',
+        render: () => (
+          <div className="h-[600px] border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-auto scale-75 origin-top">
+            <LandingPage variant="default" theme="light" />
+          </div>
+        ),
+        usageCode: `<LandingPage variant="default" theme="light" />`
+      },
+      {
+        title: 'Enterprise SaaS Variant',
+        render: () => (
+          <div className="h-[600px] border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-auto scale-75 origin-top">
+            <LandingPage 
+              variant="saas" 
+              heroVariant="split" 
+              heroData={{
+                title: 'Professional Logic for Modern Platforms',
+                subtitle: 'Accelerate your development cycle with our robust modular landing page sections. Built for high-performance enterprise applications.',
+                badge: 'Enterprise v2.0',
+                ctaPrimary: { label: 'Start 14-day trial' },
+                imageSrc: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800'
+              }}
+              featuresData={{
+                title: 'Engineered for Performance',
+                subtitle: 'Our sections are optimized for conversion and scalability.',
+                items: [
+                  { id: 1, title: 'Modular Architecture', description: 'Every section is a standalone module that can be easily customized or rearranged.' },
+                  { id: 2, title: 'Strictly Typed', description: 'Comprehensive TypeScript support ensures your data flows correctly through every section.' },
+                  { id: 3, title: 'Zero Bloat', description: 'Optimized CSS Modules ensure high lighthouse scores and fast interaction times.' }
+                ]
+              }}
+              pricingData={{
+                title: 'Transparent Pricing for Every Team',
+                plans: [
+                  { id: 1, name: 'Starter', price: '0', features: ['Up to 3 projects', 'Basic components', 'Community support'] },
+                  { id: 2, name: 'Pro', price: '49', period: 'mo', features: ['Unlimited projects', 'Advanced components', 'Priority support'], isPopular: true },
+                  { id: 3, name: 'Enterprise', price: 'Custom', features: ['Custom development', 'SLA guarantees', 'Dedicated account manager'] }
+                ]
+              }}
+              pricingVariant="toggle-monthly-yearly"
+            />
+          </div>
+        ),
+        usageCode: `<LandingPage variant="saas" heroVariant="split" pricingVariant="toggle-monthly-yearly" />`
+      },
+      {
+        title: 'Dark Mode Version',
+        render: () => (
+          <div className="h-[600px] border border-neutral-800 rounded-xl overflow-auto scale-75 origin-top bg-neutral-900">
+            <LandingPage theme="dark" variant="gradient" />
+          </div>
+        ),
+        usageCode: `<LandingPage theme="dark" variant="gradient" />`
+      }
+    ],
+    props: [
+      { name: 'variant', type: "'default' | 'minimal' | 'startup' | 'saas' | 'gradient' | 'dark'", default: "'default'", desc: 'Overall template style preset.' },
+      { name: 'theme', type: "'light' | 'dark'", default: "'light'", desc: 'Color mode (tokens update via CSS variables).' },
+      { name: 'heroVariant', type: "'centered' | 'split' | 'image-right' | 'full-background'", default: "'centered'", desc: 'Hero section layout variant.' },
+      { name: 'featuresLayout', type: "'grid' | 'cards' | 'alternating' | 'minimal'", default: "'grid'", desc: 'Layout for feature items.' },
+      { name: 'showFooter', type: 'boolean', default: 'true', desc: 'Toggle footer visibility.' }
+    ]
   },
   'signup-page': {
     id: 'signup-page',
@@ -1512,15 +1577,6 @@ const docs: Record<string, ComponentDoc> = {
     subCategory: 'Templates / Pages',
     description: 'Application-wide settings template.',
     examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border border-dashed flex items-center justify-center">Settings Template Preview</div>, usageCode: `<SettingsPage />` }],
-    props: []
-  },
-  'landing-page': {
-    id: 'landing-page',
-    name: 'Landing Page',
-    category: 'App-level',
-    subCategory: 'Templates / Pages',
-    description: 'Modular landing page for products.',
-    examples: [{ title: 'Page', render: () => <div className="h-96 scale-75 origin-top border overflow-auto"><HeroSection title="Landing Page" subtitle="Hero Section" /></div>, usageCode: `<LandingPage />` }],
     props: []
   },
   'checkout-page': {

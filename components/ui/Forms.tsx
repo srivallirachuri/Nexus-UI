@@ -399,6 +399,13 @@ export const Switch: React.FC<SwitchProps> = ({
   variant = 'default',
   disabled = false,
   className = '',
+  // Exclude framer-motion props that conflict with HTML button props
+  onAnimationStart: _onAnimationStart,
+  onAnimationEnd: _onAnimationEnd,
+  onAnimationIteration: _onAnimationIteration,
+  onDrag: _onDrag,
+  onDragStart: _onDragStart,
+  onDragEnd: _onDragEnd,
   ...props
 }) => {
   const getContainerStyles = () => {
@@ -427,7 +434,7 @@ export const Switch: React.FC<SwitchProps> = ({
     type: "spring",
     stiffness: 700,
     damping: 30
-  };
+  } as const;
 
   return (
     <div className={`flex items-center space-x-3 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>

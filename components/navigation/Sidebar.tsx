@@ -79,7 +79,6 @@ const navGroups = [
       {
         title: 'Templates / Pages',
         items: [
-          { name: 'Login Page', id: 'login-page' },
           { name: 'Signup Page', id: 'signup-page' },
           { name: 'Dashboard Page', id: 'dashboard-page' },
           { name: 'Analytics Page', id: 'analytics-page' },

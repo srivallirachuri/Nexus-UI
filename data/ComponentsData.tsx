@@ -297,39 +297,6 @@ export const components: ComponentItem[] = [
     code: '<Switch label="Toggle" />',
     info: 'Used for binary settings.'
   },
-  {
-    id: 'text',
-    name: 'Text',
-    category: 'Atomic',
-    subCategory: 'Foundation / Primitives',
-    variants: 11,
-    description: 'The fundamental typography component for all text content.',
-    preview: (
-      <Stack spacing={2} className="w-full px-6 text-center">
-        <Text variant="heading-md" weight="bold">Heading MD</Text>
-        <Text variant="body-md">Body MD (Default)</Text>
-        <Text variant="caption" tone="muted">Caption / Muted</Text>
-      </Stack>
-    ),
-    code: `<Text variant="heading-lg">Title</Text>\n<Text variant="body-md" tone="muted">Subtitle</Text>`,
-    info: 'Unified typography component supporting display, heading, body, label, caption, and code variants with various weights and tones.'
-  },
-  {
-    id: 'heading',
-    name: 'Heading',
-    category: 'Atomic',
-    subCategory: 'Foundation / Primitives',
-    variants: 6,
-    description: 'Page and section titles.',
-    preview: (
-      <Stack spacing={2} className="w-full px-6 text-center">
-        <Heading level={2}>Section Title</Heading>
-        <Heading level={4} tone="primary">Sub-heading</Heading>
-      </Stack>
-    ),
-    code: '<Heading level={1} weight="bold">Main Page Header</Heading>',
-    info: 'Uses semantic H1-H6 tags with themeable levels and tones.'
-  },
 
   // --- REUSABLE (Molecules) ---
   {
@@ -693,17 +660,7 @@ export const components: ComponentItem[] = [
 />`,
     info: 'Handles all authentication states: Login (with loading/error), Signup, Forgot Password, OTP Verification, and Success feedback.'
   },
-  {
-    id: 'landing-page',
-    name: 'Landing Page',
-    category: 'App-level',
-    subCategory: 'Templates / Pages',
-    variants: 2,
-    description: 'Modern product homepage.',
-    preview: <div className="scale-[0.4] origin-top border rounded-2xl overflow-hidden bg-white dark:bg-neutral-950 w-full h-[300px]"><Navbar onToggleDarkMode={() => {}} isDarkMode={false} /><div className="pt-20 text-center"><Heading level={1}>Better UI</Heading></div></div>,
-    code: '<LandingPage />',
-    info: 'Multi-section landing page template.'
-  },
+
   {
     id: 'crud-management',
     name: 'CRUD Management',

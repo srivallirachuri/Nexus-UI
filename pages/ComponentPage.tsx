@@ -26,25 +26,23 @@ import { Divider } from '../components/ui/divider';
 
 // Import standalone snippets as raw text for documentation
 import buttonSnippet from '../docs-snippets/button.tsx?raw';
-import textSnippet from '../docs-snippets/text.tsx?raw';
-import headingSnippet from '../docs-snippets/heading.tsx?raw';
 import iconSnippet from '../docs-snippets/icon.tsx?raw';
 import badgeSnippet from '../docs-snippets/badge.tsx?raw';
 import avatarSnippet from '../docs-snippets/avatar.tsx?raw';
 import checkboxSnippet from '../docs-snippets/checkbox.tsx?raw';
 import inputSnippet from '../docs-snippets/input.tsx?raw';
 import dividerSnippet from '../docs-snippets/divider.tsx?raw';
+import radioSnippet from '../docs-snippets/radio.tsx?raw';
 
 const snippetContent: Record<string, string> = {
   button: buttonSnippet,
-  text: textSnippet,
-  heading: headingSnippet,
   icon: iconSnippet,
   badge: badgeSnippet,
   avatar: avatarSnippet,
   checkbox: checkboxSnippet,
   input: inputSnippet,
   divider: dividerSnippet,
+  radio: radioSnippet,
 };
 
 
@@ -100,93 +98,6 @@ const docs: Record<string, ComponentDoc> = {
       { name: 'size', type: 'sm | md | lg', default: 'md', desc: 'Size of the button.' },
       { name: 'isLoading', type: 'boolean', default: 'false', desc: 'Show loading spinner.' },
       { name: 'disabled', type: 'boolean', default: 'false', desc: 'Disable interaction.' }
-    ]
-  },
-  text: {
-    id: 'text',
-    name: 'Text',
-    category: 'Atomic',
-    subCategory: 'Foundation / Primitives',
-    description: 'Text is the fundamental component for displaying body copy and small descriptions, now with support for gradients and balanced wrapping.',
-    examples: [
-      {
-        title: 'Basic Usage',
-        render: () => (
-          <Stack spacing={2}>
-            <Text>Default text content.</Text>
-            <Text tone="muted">Muted text for secondary info.</Text>
-            <Text weight="bold">Bold emphasis text.</Text>
-          </Stack>
-        ),
-        usageCode: `<Text tone="muted">Secondary content</Text>`
-      },
-      {
-        title: 'Gradients & Balance',
-        render: () => (
-          <Stack spacing={4}>
-            <Text variant="display-lg" weight="bold" gradient>Premium Gradient Text</Text>
-            <Text variant="display-lg" weight="bold" gradient="from-purple-600 to-pink-500">Custom Gradient</Text>
-            <div className="max-w-xs p-4 border rounded-lg">
-              <Text balanced>This is a long sentence that would normally look awkward when it wraps, but with the balanced prop it looks much better.</Text>
-            </div>
-          </Stack>
-        ),
-        usageCode: `<Text gradient>Gradient Text</Text>\n<Text balanced>Balanced wrapping...</Text>`
-      },
-      {
-        title: 'Interactions',
-        render: () => (
-          <Stack spacing={4}>
-            <Text interactive hoverColor="#2563eb" weight="medium">Hover me for color change</Text>
-            <Text hoverScale={1.1} weight="medium" interactive>Hover me for scale 1.1</Text>
-            <Text tapScale={0.9} weight="medium" interactive>Tap/Click me for compression</Text>
-            <Text hoverOpacity={0.5} weight="medium" interactive>Hover for opacity</Text>
-          </Stack>
-        ),
-        usageCode: `<Text interactive hoverColor="blue">Color Shift</Text>\n<Text hoverScale={1.1} interactive>Scale Up</Text>`
-      }
-    ],
-    props: [
-      { name: 'variant', type: 'display | heading | body | label | caption | code', default: '"body-md"', desc: 'Typography variant.' },
-      { name: 'tone', type: 'TextTone', default: '"default"', desc: 'Visual tone.' },
-      { name: 'weight', type: 'TextWeight', default: '"regular"', desc: 'Font weight.' },
-      { name: 'gradient', type: 'boolean | string', default: 'false', desc: 'Applies a background gradient to the text.' },
-      { name: 'balanced', type: 'boolean', default: 'false', desc: 'Uses text-wrap: balance for better typography.' },
-      { name: 'decoration', type: 'underline | line-through | none', default: '"none"', desc: 'Text decoration.' },
-      { name: 'interactive', type: 'boolean', default: 'false', desc: 'Enables default hover/tap effects.' },
-      { name: 'hoverScale', type: 'number', default: '1.02', desc: 'Scale factor on hover.' },
-      { name: 'tapScale', type: 'number', default: '0.98', desc: 'Scale factor on tap/click.' },
-      { name: 'hoverOpacity', type: 'number', default: '1', desc: 'Opacity on hover.' },
-      { name: 'hoverColor', type: 'string', default: '-', desc: 'Custom color on hover.' },
-      { name: 'onClick', type: '() => void', default: '-', desc: 'Click handler.' }
-    ]
-  },
-  heading: {
-    id: 'heading',
-    name: 'Heading',
-    category: 'Atomic',
-    subCategory: 'Foundation / Primitives',
-    description: 'Headings for titles and subtitles, featuring premium animated underlines.',
-    examples: [
-      {
-        title: 'Levels & Underline',
-        render: () => (
-          <Stack spacing={6}>
-            <Heading level={1} underlined>Heading with Underline</Heading>
-            <Heading level={2} gradient hoverScale={1.05} interactive>Animated Gradient Title</Heading>
-            <Heading level={3} tapScale={0.95} interactive>Standard Heading</Heading>
-          </Stack>
-        ),
-        usageCode: `<Heading level={1} underlined interactive>Title</Heading>\n<Heading level={2} hoverScale={1.05} interactive>Scale Up</Heading>`
-      }
-    ],
-    props: [
-      { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6', default: '1', desc: 'Heading level.' },
-      { name: 'underlined', type: 'boolean', default: 'false', desc: 'Shows an animated underline.' },
-      { name: 'gradient', type: 'boolean | string', default: 'false', desc: 'Applies a gradient to the heading.' },
-      { name: 'interactive', type: 'boolean', default: 'false', desc: 'Enables default hover/tap effects.' },
-      { name: 'hoverScale', type: 'number', default: '1.02', desc: 'Scale factor on hover.' },
-      { name: 'tapScale', type: 'number', default: '0.98', desc: 'Scale factor on tap/click.' }
     ]
   },
   icon: {
